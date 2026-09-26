@@ -11,6 +11,7 @@
 import json
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import urlparse, parse_qs
 
 HOST = "127.0.0.1"
 PORT = 8080
@@ -18,8 +19,15 @@ PORT = 8080
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
+        query = parse_qs(urlparse(self.path).query)
+        object_id = query.get("objectId", [None])[0]
+
         body = json.dumps(
-            {"message": "Привет из локального тестового сервера", "time": datetime.now().isoformat()},
+            {
+                "message": "Привет из локального тестового сервера",
+                "receivedObjectId": object_id,
+                "time": datetime.now().isoformat(),
+            },
             ensure_ascii=False,
         ).encode("utf-8")
 

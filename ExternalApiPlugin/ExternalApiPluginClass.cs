@@ -7,12 +7,13 @@ namespace ExternalApiPlugin
     {
         public void BindMenu(IMenuDefinition menu)
         {
-            menu.AddMenuItem("Внешний API#Тестовый запрос", OpenExternalApiForm, arg => true);
+            menu.AddMenuItem("Внешний API#Тестовый запрос", OpenExternalApiForm, arg => arg?.PluginCall?.IdVersion > 0);
         }
 
         private void OpenExternalApiForm(INetPluginCall call)
         {
-            using (var form = new ExternalApiForm())
+            var objectId = call.PluginCall.IdVersion;
+            using (var form = new ExternalApiForm(objectId))
             {
                 form.ShowDialog();
             }
