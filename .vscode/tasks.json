@@ -1,0 +1,46 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build (Debug)",
+            "type": "shell",
+            "command": "msbuild.exe",
+            "args": [
+                "${workspaceFolder}\\ExternalApiPlugin\\ExternalApiPlugin.csproj",
+                "/p:Configuration=Debug",
+                "/nologo",
+                "/v:minimal"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build (Release)",
+            "type": "shell",
+            "command": "msbuild.exe",
+            "args": [
+                "${workspaceFolder}\\ExternalApiPlugin\\ExternalApiPlugin.csproj",
+                "/p:Configuration=Release",
+                "/nologo",
+                "/v:minimal"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "msbuild.exe",
+            "args": [
+                "${workspaceFolder}\\ExternalApiPlugin\\ExternalApiPlugin.csproj",
+                "/t:Clean",
+                "/nologo",
+                "/v:minimal"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}
