@@ -4,12 +4,15 @@
         {
             "label": "build (Debug)",
             "type": "shell",
-            "command": "msbuild.exe",
+            "command": "dotnet",
             "args": [
-                "${workspaceFolder}\\ExternalApiPlugin\\ExternalApiPlugin.csproj",
-                "/p:Configuration=Debug",
-                "/nologo",
-                "/v:minimal"
+                "build",
+                "${workspaceFolder}/ExternalApiPlugin/ExternalApiPlugin.csproj",
+                "-c",
+                "Debug",
+                "-nologo",
+                "-v",
+                "minimal"
             ],
             "group": {
                 "kind": "build",
@@ -20,12 +23,15 @@
         {
             "label": "build (Release)",
             "type": "shell",
-            "command": "msbuild.exe",
+            "command": "dotnet",
             "args": [
-                "${workspaceFolder}\\ExternalApiPlugin\\ExternalApiPlugin.csproj",
-                "/p:Configuration=Release",
-                "/nologo",
-                "/v:minimal"
+                "build",
+                "${workspaceFolder}/ExternalApiPlugin/ExternalApiPlugin.csproj",
+                "-c",
+                "Release",
+                "-nologo",
+                "-v",
+                "minimal"
             ],
             "group": "build",
             "problemMatcher": "$msCompile"
@@ -33,12 +39,13 @@
         {
             "label": "clean",
             "type": "shell",
-            "command": "msbuild.exe",
+            "command": "dotnet",
             "args": [
-                "${workspaceFolder}\\ExternalApiPlugin\\ExternalApiPlugin.csproj",
-                "/t:Clean",
-                "/nologo",
-                "/v:minimal"
+                "clean",
+                "${workspaceFolder}/ExternalApiPlugin/ExternalApiPlugin.csproj",
+                "-nologo",
+                "-v",
+                "minimal"
             ],
             "problemMatcher": "$msCompile"
         }

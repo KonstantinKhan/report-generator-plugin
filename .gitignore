@@ -1,0 +1,6 @@
+# Build artifacts
+[Bb]in/
+[Oo]bj/
+
+# IDE (nested project folder only; root .vscode/ with tasks.json is tracked intentionally)
+ExternalApiPlugin/.vscode/

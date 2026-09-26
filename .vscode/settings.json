@@ -1,13 +1,3 @@
 {
-    // Профиль терминала с прогруженным окружением MSBuild (иначе msbuild.exe не будет виден в PATH).
-    // Поправь путь под свою редакцию VS / Build Tools: Community, Professional, Enterprise или BuildTools.
-    "terminal.integrated.profiles.windows": {
-        "Developer Cmd": {
-            "path": "cmd.exe",
-            "args": [
-                "/k",
-                "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\Tools\\VsDevCmd.bat\""
-            ]
-        }
-    }
+    // Сборка идёт через `dotnet build` (см. tasks.json) — отдельный терминал с окружением VS не нужен.
 }
