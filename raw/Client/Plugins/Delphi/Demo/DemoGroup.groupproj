@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{8586F59B-4818-4745-A37E-C75A852D0C28}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Demo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="HashPlugin\SHA2_HashPlugin.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Demo">
+        <MSBuild Projects="Demo.dproj"/>
+    </Target>
+    <Target Name="Demo:Clean">
+        <MSBuild Projects="Demo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Demo:Make">
+        <MSBuild Projects="Demo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SHA2_HashPlugin">
+        <MSBuild Projects="HashPlugin\SHA2_HashPlugin.dproj"/>
+    </Target>
+    <Target Name="SHA2_HashPlugin:Clean">
+        <MSBuild Projects="HashPlugin\SHA2_HashPlugin.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SHA2_HashPlugin:Make">
+        <MSBuild Projects="HashPlugin\SHA2_HashPlugin.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Demo;SHA2_HashPlugin"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Demo:Clean;SHA2_HashPlugin:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Demo:Make;SHA2_HashPlugin:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

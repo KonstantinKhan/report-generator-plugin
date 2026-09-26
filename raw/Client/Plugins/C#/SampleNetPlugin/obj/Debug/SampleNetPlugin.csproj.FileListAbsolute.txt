@@ -1,0 +1,8 @@
+D:\ProductsBin\22.2\Program Files\Ascon\Loodsman\SDK\Client\Plugins\C#\SampleNetPlugin\obj\Debug\SampleNetPlugin.csprojResolveAssemblyReference.cache
+D:\ProductsBin\22.2\Program Files\Ascon\Loodsman\SDK\Client\Plugins\C#\SampleNetPlugin\obj\Debug\Interop.Ask.dll
+D:\ProductsBin\22.2\Program Files\Ascon\Loodsman\SDK\Client\Plugins\C#\SampleNetPlugin\obj\Debug\Interop.BOSimple.dll
+D:\ProductsBin\22.2\Program Files\Ascon\Loodsman\SDK\Client\Plugins\C#\SampleNetPlugin\obj\Debug\Interop.DataProvider.dll
+D:\ProductsBin\22.2\Program Files\Ascon\Loodsman\SDK\Client\Plugins\C#\SampleNetPlugin\obj\Debug\Interop.Loodsman.dll
+D:\ProductsBin\22.2\Program Files\Ascon\Loodsman\SDK\Client\Plugins\C#\SampleNetPlugin\obj\Debug\Interop.LoodsmanObjects.dll
+D:\ProductsBin\22.2\Program Files\Ascon\Loodsman\SDK\Client\Plugins\C#\SampleNetPlugin\obj\Debug\Interop.PDMObjects.dll
+D:\ProductsBin\22.2\Program Files\Ascon\Loodsman\SDK\Client\Plugins\C#\SampleNetPlugin\obj\Debug\SampleNetPlugin.csproj.ResolveComReference.cache

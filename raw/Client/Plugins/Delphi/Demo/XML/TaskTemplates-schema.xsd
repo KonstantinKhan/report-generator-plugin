@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wmh="http://www.wmhelp.com/2003/eGenerator" elementFormDefault="qualified">
+  <xs:element name="SuprTemplates">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="TaskTemplates"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TaskTemplates">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="TaskTemplate"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TaskTemplate">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Topic"/>
+        <xs:element ref="Description"/>
+        <xs:element ref="CalcDirection"/>
+        <xs:element ref="Checker"/>
+        <xs:element ref="Priority"/>
+        <xs:element ref="PlanDuration"/>
+        <xs:element ref="Worker"/>
+        <xs:element ref="Author"/>
+        <xs:element ref="WorkerIsTrusted"/>
+        <xs:element ref="Subscribers"/>
+        <xs:element ref="Attachments"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Topic" type="xs:string"/>
+  <xs:element name="Description" type="xs:string"/>
+  <xs:element name="CalcDirection" type="CalcDirection"/>
+  <xs:element name="Checker" type="xs:string"/>
+  <xs:element name="Priority" type="xs:integer"/>
+  <xs:element name="PlanDuration" type="xs:integer"/>
+  <xs:element name="Worker" type="xs:string"/>
+  <xs:element name="Author" type="xs:string"/>
+  <xs:element name="WorkerIsTrusted" type="xs:boolean"/>
+  <xs:element name="Subscribers">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Subscriber"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Subscriber">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="UserLogin"/>
+        <xs:element ref="Trusted"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UserLogin" type="xs:string"/>
+  <xs:element name="Trusted" type="xs:boolean"/>
+  <xs:element name="Attachments">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Attachment"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Attachment">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="IDObject"/>
+        <xs:element ref="Name"/>
+        <xs:element ref="ObjectType"/>
+        <xs:element ref="Semantics"/>
+        <xs:element ref="URL"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="IDObject" type="xs:unsignedInt"/>
+  <xs:element name="Name" type="xs:string"/>
+  <xs:element name="ObjectType" type="xs:unsignedInt"/>
+  <xs:element name="Semantics" type="xs:unsignedInt"/>
+  <xs:element name="URL" type="xs:string"/>
+  <xs:simpleType name="CalcDirection">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AsSoonAsPossible"/>
+      <xs:enumeration value="AsLateAsPossible"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+
+
+
+
+
+

@@ -1,0 +1,143 @@
+﻿<Grid x:Class="LoodsmanAttributesFrame.WpfUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:LoodsmanAttributesFrame"      
+      xmlns:sys="clr-namespave:System;assemby=mscorlib"
+      FocusManager.IsFocusScope="True"      
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <Grid.Resources>
+    </Grid.Resources>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
+    <ToolBar VerticalAlignment="Top" FocusManager.IsFocusScope="False" Height="30" ToolBarTray.IsLocked="True">
+        <Button VerticalAlignment="Stretch"  >
+            <Button.Content>
+                <Grid VerticalAlignment="Stretch"  >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="16" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Stretch">
+                        <Image Margin="0,0,4,0" Source="/LoodsmanAttributesFrame;Component/Resources/add.png" Stretch="None" />
+                        <TextBlock Text="Добавить атрибут" Margin="2 0" />
+                    </StackPanel>
+                    <Button Grid.Column="1"  Margin="0 -4" Background="{x:Null}" BorderThickness="0">
+                        <Button.Resources>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="true" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="BorderThickness" Value="1 0 0 0" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Resources>
+                        <Button.Content>
+                            <Path Margin="2 0" VerticalAlignment="Center" Fill="#FF527DB5" Stretch="Uniform" HorizontalAlignment="Right" Data="F1 M 301.14,-189.041L 311.57,-189.041L 306.355,-182.942L 301.14,-189.041 Z "/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+            </Button.Content>
+            <Button.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Test 1" />
+                </ContextMenu>
+            </Button.ContextMenu>
+        </Button>
+        <Button IsTabStop="False" VerticalAlignment="Stretch" >
+            <Image Source="/LoodsmanAttributesFrame;Component/Resources/delete.png" Stretch="None"/>
+        </Button>
+        <Separator IsTabStop="False" VerticalAlignment="Stretch" Margin="2,0" />
+        <Button Name="btnRefresh" IsTabStop="False" VerticalAlignment="Stretch" Command="{Binding RefreshCommand}" >
+            <Image Source="/LoodsmanAttributesFrame;Component/Resources/arrow_refresh.png" Stretch="None" />
+        </Button>
+    </ToolBar>
+    <ListView Name="lvAttrValues" Grid.Row="1" local:ListViewLayoutManager.Enabled="True" SelectionMode="Single" ItemsSource="{Binding AttrValues, Mode=TwoWay}" 
+              HorizontalContentAlignment="Stretch" AlternationCount="2" Foreground="Black" >
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <Setter Property="MinHeight" Value="25" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            </Style>
+        </ListView.ItemContainerStyle>
+        <ListView.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Вид">
+                    <MenuItem Header="Отображать обязательные вначале" IsCheckable="True" IsChecked="{Binding Path=IsShowRequiredFirst}" Click="ShowRequiredFirstClick" />
+                    <MenuItem Header="Переносить слова" IsCheckable="True" IsChecked="True" />
+                    <Separator/>
+                    <MenuItem Header="Отображать все доступные" IsCheckable="True" IsChecked="True" />
+                    <MenuItem Header="Показывать служебные" Name="miShowService" IsCheckable="True" IsChecked="False" Click="ShowServiceClick" />
+                    <MenuItem Header="Показывать состояние и количество" Name="miShowStateAndQuantity" IsCheckable="True" IsChecked="True" Click="ShowStateAndQuantityClick" />
+                    <Separator/>
+                    <MenuItem Header="Предварительный просмотр текста" />
+                    <MenuItem Header="Предварительный просмотр изображений" />
+                    <Separator/>
+                    <MenuItem Header="Отображать панель инструментов" />
+                </MenuItem>
+                <MenuItem Header="Обновить" />
+            </ContextMenu>
+        </ListView.ContextMenu>
+        <ListView.View>
+            <GridView>
+                <GridViewColumn Header="Атрибут" Width="100" local:RangeColumn.MinWidth="100" local:RangeColumn.MaxWidth="170">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{DynamicResource {x:Static SystemColors.DesktopBrush}}" BorderThickness="0,0,1,1" Margin="-8,-2,-7,-2" >
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding Path=IsSelected, RelativeSource={RelativeSource AncestorType=ListViewItem}}" Value="False"/>
+                                                    <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource AncestorType=ListViewItem}}" Value="False"/>
+                                                </MultiDataTrigger.Conditions>
+                                                <MultiDataTrigger.Setters>
+                                                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                                                </MultiDataTrigger.Setters>
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style> 
+                                </Border.Style>
+                                <DockPanel Margin="6 2 6 2" VerticalAlignment="Center">
+                                    <Image DockPanel.Dock="Left" Source="/LoodsmanAttributesFrame;Component/Resources/link.png" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Center" Width="16" Height="16" 
+                                           Visibility="{Binding Path=.,Converter={local:LinkIconVisibleConvertor}}" />
+                                    <TextBlock 
+                                        Text="{Binding Name}" TextWrapping="WrapWithOverflow"
+                                        Foreground="{Binding Path=., Converter={local:AttributeTypeToColorConverter}}" 
+                                        TextDecorations="{Binding Path=.,Converter={local:AttrValueToTextDecoration}}" />
+                                </DockPanel>
+                            </Border>
+                        </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <GridViewColumn Header="Значение" Width="150" local:RangeColumn.MinWidth="50" local:RangeColumn.IsFillColumn="True">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" BorderThickness="0,0,0,0.5" Margin="-8,-2,-7,-2">
+                                <DockPanel Margin="6 2 6 2" VerticalAlignment="Center">
+                                    <Image DockPanel.Dock="Left" Source="{Binding Path=Picture}" Stretch="Fill" HorizontalAlignment="Left" VerticalAlignment="Center" 
+                                           Width="16" Height="16"
+                                           Visibility="{Binding Path=., Converter={local:StateImageVisibleConvertor}}"
+                                           />
+                                    <TextBlock Text="{Binding Path=Value}" TextWrapping="WrapWithOverflow" />
+                                </DockPanel>
+                            </Border>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+            </GridView>
+        </ListView.View>
+    </ListView>
+</Grid>

@@ -1,0 +1,72 @@
+object frmMessages: TfrmMessages
+  Left = 0
+  Top = 0
+  BorderIcons = [biSystemMenu]
+  Caption = 'Demo - '#1054#1090#1087#1088#1072#1074#1082#1072' '#1089#1086#1086#1073#1097#1077#1085#1080#1081
+  ClientHeight = 87
+  ClientWidth = 373
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lbl1: TLabel
+    Left = 8
+    Top = 8
+    Width = 99
+    Height = 13
+    Caption = #1057#1087#1080#1089#1086#1082' '#1089#1086#1086#1073#1097#1077#1085#1080#1081':'
+  end
+  object cbb1: TComboBox
+    Left = 8
+    Top = 24
+    Width = 359
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    ItemIndex = 0
+    TabOrder = 0
+    Text = #1054#1073#1085#1086#1074#1080#1090#1100' '#1086#1073#1098#1077#1082#1090' - WM_REFRESHVERSION = WM_USER + 1;'
+    Items.Strings = (
+      #1054#1073#1085#1086#1074#1080#1090#1100' '#1086#1073#1098#1077#1082#1090' - WM_REFRESHVERSION = WM_USER + 1;'
+      #1054#1073#1085#1086#1074#1080#1090#1100' '#1088#1086#1076#1080#1090#1077#1083#1100#1089#1082#1080#1081' '#1086#1073#1098#1077#1082#1090' - WM_REFRESHPARENT  = WM_USER + 4;'
+      #1055#1077#1088#1077#1081#1090#1080' '#1082' '#1076#1086#1095#1077#1088#1085#1077#1084#1091' '#1086#1073#1098#1077#1082#1090#1091' - WM_GOTOCHILD  = WM_USER + 5;'
+      
+        #1054#1073#1085#1086#1074#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' "'#1095#1077#1082#1072#1091#1090#1086#1074'" - WM_REFRESHCHECKOUTLIST  = WM_USER +' +
+        ' 6;'
+      #1054#1073#1085#1086#1074#1080#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1087#1088#1086#1077#1082#1090#1086#1074' - WM_REFRESHPROJECTLIST =  WM_USER + 7;'
+      #1055#1077#1088#1077#1081#1090#1080' '#1082' '#1086#1073#1098#1077#1082#1090#1091' - WM_GOTONODE = WM_USER + 8;'
+      #1055#1077#1088#1077#1081#1090#1080' '#1082' '#1086#1073#1098#1077#1082#1090#1091'2 - WM_GOTOOBJECT = WM_USER + 9;'
+      
+        #1054#1090#1082#1088#1099#1090#1100' '#1086#1073#1098#1077#1082#1090' '#1074' '#1085#1086#1074#1086#1084' '#1086#1082#1085#1077' - WM_OPENOBJECTINNEWWINDOW = WM_USER' +
+        ' + 100;'
+      
+        #1054#1090#1082#1088#1099#1090#1100' '#1086#1073#1098#1077#1082#1090#1099' '#1074' '#1085#1086#1074#1086#1084' '#1086#1082#1085#1077' - WM_OPENOBJECTSINNEWWINDOW = WM_US' +
+        'ER + 101;'
+      
+        #1054#1090#1082#1088#1099#1090#1100' '#1086#1073#1098#1077#1082#1090#1099' '#1074' '#1085#1086#1074#1086#1084' '#1086#1082#1085#1077' "'#1095#1077#1082#1072#1091#1090#1072'" - WM_OPENOBJECTSINNEWCHEC' +
+        'KOUTWINDOW = WM_USER + 103;')
+  end
+  object btnSend: TButton
+    Left = 173
+    Top = 51
+    Width = 93
+    Height = 25
+    Caption = #1054#1090#1087#1088#1072#1074#1080#1080#1090#1100
+    ModalResult = 1
+    TabOrder = 1
+  end
+  object btnClose: TButton
+    Left = 272
+    Top = 51
+    Width = 93
+    Height = 25
+    Caption = #1047#1072#1082#1088#1099#1090#1100
+    ModalResult = 2
+    TabOrder = 2
+  end
+end

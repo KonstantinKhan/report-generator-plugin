@@ -1,0 +1,7 @@
+LIBRARY	LoodsmanPlugIn
+
+EXPORTS
+InitUserDLLCom		@1
+PgiCheckMenuItemCom	@2
+ProjectList		@3
+LinkedFast		@4

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<SuprTemplates xsi:noNamespaceSchemaLocation="file:///TaskTemplates-schema.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <TaskTemplates>
+    <TaskTemplate>
+      <Topic>План ТПП</Topic>
+      <Description>Создание укрупненного плана ТПП</Description>
+      <CalcDirection>AsSoonAsPossible</CalcDirection>
+      <Checker>%PARENTAUTHOR%</Checker>
+      <Priority>5</Priority>
+      <PlanDuration>1</PlanDuration>
+      <Author>%PARENTAUTHOR%</Author>
+      <Worker>%PARENTWORKER%</Worker>
+      <WorkerIsTrusted>1</WorkerIsTrusted>
+      <Subscribers>
+        <Subscriber>
+          <UserLogin>%PARENTAUTHOR%</UserLogin>
+          <Trusted>1</Trusted>
+        </Subscriber>
+        <Subscriber>
+          <UserLogin>%PARENTWORKER%</UserLogin>
+          <Trusted>1</Trusted>
+        </Subscriber>
+      </Subscribers>
+    </TaskTemplate>
+    <TaskTemplate>
+      <Topic>%PARENTTOPIC% - Задание на разработку производственно-технологической ЭСИ</Topic>
+      <Description>Задание на разработку производственно-технологической ЭСИ</Description>
+      <CalcDirection>AsLateAsPossible</CalcDirection>
+      <Priority>5</Priority>
+      <PlanDuration>3</PlanDuration>
+    </TaskTemplate>
+    <TaskTemplate>
+      <Topic>%PARENTTOPIC% - Определение потребности в материалах и трудозатратах</Topic>
+      <Description>Определение потребности в материалах и трудозатратах</Description>
+      <CalcDirection>AsSoonAsPossible</CalcDirection>
+      <Priority>5</Priority>
+      <PlanDuration>3</PlanDuration>
+    </TaskTemplate>
+    <TaskTemplate>
+      <Topic>%PARENTTOPIC% - Задание на разработку межцеховых технологических маршрутов</Topic>
+      <Description>Задание на разработку межцеховых технологических маршрутов</Description>
+      <CalcDirection>AsSoonAsPossible</CalcDirection>
+      <Priority>5</Priority>
+      <PlanDuration>3</PlanDuration>
+    </TaskTemplate>
+  </TaskTemplates>
+</SuprTemplates>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
