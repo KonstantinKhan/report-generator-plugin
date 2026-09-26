@@ -25,9 +25,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- SDK плагинов ЛОЦМАН:PLM (внутри — NoPIA-встроенные interop-типы COM-библиотеки Loodsman). -->
     <Reference Include="Ascon.Plm.Loodsman.PluginSDK">
       <HintPath>$(LoodsmanClientDir)Ascon.Plm.Loodsman.PluginSDK.dll</HintPath>
       <Private>false</Private>
+    </Reference>
+    <!-- Готовая tlbimp-обёртка COM-библиотеки ЛОЦМАН: содержит Loodsman.IPluginCall и другие interop-типы, встроенные в PluginSDK (CS1748). Private=true — копируется в bin рядом с плагином. -->
+    <Reference Include="Interop.Loodsman">
+      <HintPath>libs\Interop.Loodsman.dll</HintPath>
+      <Private>True</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Net.Http" />
