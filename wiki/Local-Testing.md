@@ -41,20 +41,26 @@ python tools\test_server.py
 
 ## Как плагин на него ссылается
 
-В `ExternalApiForm.cs`:
+Адрес и маршрут больше не захардкожены в коде — они читаются из `ExternalApiPlugin/server-config.json` (грузит `ServerConfig.cs`, см. [ExternalApiPlugin](ExternalApiPlugin.md)):
 
-```csharp
-// TODO: временно — локальный тестовый сервер (tools/test_server.py), интернет с этой машины закрыт.
-private const string ApiBaseUrl = "http://127.0.0.1:8080/";
+```json
+{
+  "baseUrl": "http://127.0.0.1:8080/",
+  "specificationEndpoint": "specifications/{versionId}",
+  "healthEndpoint": "health",
+  "timeoutSeconds": 30
+}
 ```
+
+⚠️ **Рассинхронизация с `tools/test_server.py`.** Плагин теперь шлёт `POST /specifications/{versionId}` (id объекта — в пути), а не `GET /?objectId=...`. `tools/test_server.py` до сих пор реализует только `do_GET` с `objectId` в query — под текущий формат запроса плагина не подходит, запрос вернёт 404. Для локальной проверки нужно либо поднять реальный `report-generator/report-server` (Kotlin/Ktor, роуты `GET /health` и `POST /specifications/{versionId}`, слушает `127.0.0.1:8080` по умолчанию — см. `AppConfig.kt`), либо доработать `test_server.py` под `POST`/path-параметр. Актуализация `test_server.py` — на этот момент не сделана.
 
 Подробнее про поток данных — в [ExternalApiPlugin](ExternalApiPlugin.md).
 
 ## Как переключить на боевой сервер
 
 1. Убедиться, что боевой адрес реально доступен с рабочей машины (см. варианты в [Network-Constraints](Network-Constraints.md) — внутренняя сеть/VPN либо выданный whitelist).
-2. Заменить значение `ApiBaseUrl` в `ExternalApiForm.cs` на боевой URL (и убрать TODO-комментарий).
-3. Пересобрать (см. [Build-And-Deploy](Build-And-Deploy.md)) и переустановить `.dll` в `PluginStore`.
+2. Поменять `baseUrl` (и при необходимости `specificationEndpoint`) в `server-config.json` на боевые значения — пересборка не нужна, файл лежит рядом с `.dll` в `PluginStore`.
+3. Если менялся сам `.dll` (не только конфиг) — пересобрать (см. [Build-And-Deploy](Build-And-Deploy.md)) и переустановить в `PluginStore`.
 
 Локальный тестовый сервер (`tools/test_server.py`) при этом можно оставить в репозитории — он не мешает боевой работе и пригодится при следующей отладке в изолированной сети.
 

@@ -60,11 +60,14 @@ private async void RequestButton_Click(object sender, EventArgs e)
     {
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-        var url = $"{ApiBaseUrl}?objectId={_objectId}";
-        using (var client = new HttpClient())
+        var config = ServerConfig.Load();
+        var url = config.BuildSpecificationUrl(_objectId);
+
+        using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds) })
+        using (var response = await client.PostAsync(url, null))
         {
-            var response = await client.GetStringAsync(url);
-            _resultBox.Text = $"Id объекта: {_objectId}\r\n\r\nОтвет сервера:\r\n{response}";
+            var body = await response.Content.ReadAsStringAsync();
+            _resultBox.Text = $"Id объекта: {_objectId}\r\n\r\nHTTP {(int)response.StatusCode} {response.ReasonPhrase}\r\n\r\nОтвет сервера:\r\n{body}";
         }
     }
     catch (Exception ex)
@@ -80,10 +83,22 @@ private async void RequestButton_Click(object sender, EventArgs e)
 
 Важные детали реализации:
 
-- **Асинхронность.** Обработчик клика — `async void`, запрос идёт через `await client.GetStringAsync(...)`, а не через блокирующий `.Result`. Первая версия плагина делала синхронный вызов прямо в обработчике меню — рабочий вариант, но блокирующий UI-поток клиента на время запроса; после перехода на форму с кнопкой сделали правильно сразу.
+- **Асинхронность.** Обработчик клика — `async void`, запрос идёт через `await client.PostAsync(...)`, а не через блокирующий `.Result`. Первая версия плагина делала синхронный вызов прямо в обработчике меню — рабочий вариант, но блокирующий UI-поток клиента на время запроса; после перехода на форму с кнопкой сделали правильно сразу.
 - **`ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12`.** Явно выставляется перед каждым запросом. На .NET Framework в хостовом процессе стороннего приложения (клиента ЛОЦМАН) нет гарантии, что TLS 1.2 включён по умолчанию — без этой строки HTTPS-запросы к серверам, требующим TLS 1.2+, могут падать на этапе handshake. В нашем случае реальная ошибка оказалась сетевой (см. [Network-Constraints](Network-Constraints.md)), а не TLS-й, но защита от этого класса проблем оставлена.
-- **`?objectId={_objectId}` в URL.** Так id выделенного в ЛОЦМАН объекта физически попадает во внешний запрос — это то значение, которое дальше должен читать и использовать сервис-приёмник.
-- **`ApiBaseUrl`** — константа, сейчас указывает на локальный тестовый сервер (см. [Local-Testing](Local-Testing.md)), потому что прямой интернет с рабочей машины закрыт (см. [Network-Constraints](Network-Constraints.md)). Для реального использования нужно поменять на боевой адрес.
+- **`POST {versionId}` в пути, не query-параметр.** Реальный сервер (`report-generator/report-server`, Ktor) отдаёт `POST /specifications/{versionId}` — id выделенного в ЛОЦМАН объекта подставляется в path, не в query. Ответ сервера — JSON `{id, path}` (id сгенерированного PDF и путь к нему на диске сервера), плагин просто показывает тело ответа как есть.
+- **`ServerConfig`** (`ExternalApiPlugin/ServerConfig.cs`) читает `server-config.json` рядом со сборкой (`System.Text.Json`) и собирает конечный URL. Раньше адрес сервера был захардкожен константой `ApiBaseUrl` прямо в `ExternalApiForm.cs` — вынесен в JSON, чтобы менять адрес/маршрут/таймаут без пересборки. Поля конфига:
+
+  ```json
+  {
+    "baseUrl": "http://127.0.0.1:8080/",
+    "specificationEndpoint": "specifications/{versionId}",
+    "healthEndpoint": "health",
+    "timeoutSeconds": 30
+  }
+  ```
+
+  `{versionId}` в `specificationEndpoint` подставляется `_objectId` плагина. `healthEndpoint` пока не используется кодом — зарезервирован под будущую проверку доступности сервера (`GET /health`). Файл копируется в output через `CopyToOutputDirectory=PreserveNewest` (правка в `.csproj`), поэтому редактируется прямо рядом с `.dll` в `PluginStore` без пересборки.
+- **Для реального использования** нужно поменять `baseUrl` в `server-config.json` на боевой адрес — сейчас указывает на локальный тестовый сервер (см. [Local-Testing](Local-Testing.md)), потому что прямой интернет с рабочей машины закрыт (см. [Network-Constraints](Network-Constraints.md)).
 
 ## См. также
 
