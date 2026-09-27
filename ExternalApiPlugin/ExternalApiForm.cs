@@ -7,9 +7,6 @@ namespace ExternalApiPlugin
 {
     internal class ExternalApiForm : Form
     {
-        // TODO: временно — локальный тестовый сервер (tools/test_server.py), интернет с этой машины закрыт.
-        private const string ApiBaseUrl = "http://127.0.0.1:8080/";
-
         private readonly long _objectId;
         private readonly Button _requestButton;
         private readonly TextBox _resultBox;
@@ -60,11 +57,14 @@ namespace ExternalApiPlugin
                 // .NET Framework может не поднять TLS 1.2 сам по себе в хостовом процессе клиента.
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-                var url = $"{ApiBaseUrl}?objectId={_objectId}";
-                using (var client = new HttpClient())
+                var config = ServerConfig.Load();
+                var url = config.BuildSpecificationUrl(_objectId);
+
+                using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds) })
+                using (var response = await client.PostAsync(url, null))
                 {
-                    var response = await client.GetStringAsync(url);
-                    _resultBox.Text = $"Id объекта: {_objectId}\r\n\r\nОтвет сервера:\r\n{response}";
+                    var body = await response.Content.ReadAsStringAsync();
+                    _resultBox.Text = $"Id объекта: {_objectId}\r\n\r\nHTTP {(int)response.StatusCode} {response.ReasonPhrase}\r\n\r\nОтвет сервера:\r\n{body}";
                 }
             }
             catch (Exception ex)
