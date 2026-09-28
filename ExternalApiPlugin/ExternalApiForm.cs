@@ -1,11 +1,14 @@
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Windows.Forms;
+using System.Text.Json;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ExternalApiPlugin
 {
-    internal class ExternalApiForm : Form
+    internal class ExternalApiForm : Window
     {
         private readonly long _objectId;
         private readonly Button _requestButton;
@@ -15,46 +18,49 @@ namespace ExternalApiPlugin
         {
             _objectId = objectId;
 
-            Text = "Запрос к внешнему API";
-            Width = 480;
-            Height = 340;
-            StartPosition = FormStartPosition.CenterScreen;
+            Title = "Отчёты";
+            Width = 560;
+            Height = 380;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            FontFamily = new FontFamily("Segoe UI");
+            FontSize = 13;
 
-            var idLabel = new Label
+            var root = new Grid { Margin = new Thickness(16) };
+            root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            root.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+
+            _requestButton = new Button
             {
-                Text = $"Id выделенного объекта: {objectId}",
-                Left = 12,
-                Top = 12,
-                Width = 440,
-                AutoSize = false
+                Content = "Спецификация ГОСТ Р 2.106-2019 без ВП",
+                Padding = new Thickness(12, 6, 12, 6),
+                HorizontalAlignment = HorizontalAlignment.Left
             };
-
-            _requestButton = new Button { Text = "Отправить на сервер", Left = 12, Top = 36, Width = 160 };
             _requestButton.Click += RequestButton_Click;
+            Grid.SetRow(_requestButton, 0);
 
             _resultBox = new TextBox
             {
-                Left = 12,
-                Top = 72,
-                Width = 440,
-                Height = 220,
-                Multiline = true,
-                ReadOnly = true,
-                ScrollBars = ScrollBars.Vertical
+                Margin = new Thickness(0, 12, 0, 0),
+                Padding = new Thickness(8),
+                IsReadOnly = true,
+                TextWrapping = TextWrapping.Wrap,
+                AcceptsReturn = true,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Auto
             };
+            Grid.SetRow(_resultBox, 1);
 
-            Controls.Add(idLabel);
-            Controls.Add(_requestButton);
-            Controls.Add(_resultBox);
+            root.Children.Add(_requestButton);
+            root.Children.Add(_resultBox);
+            Content = root;
         }
 
-        private async void RequestButton_Click(object sender, EventArgs e)
+        private async void RequestButton_Click(object sender, RoutedEventArgs e)
         {
-            _requestButton.Enabled = false;
+            _requestButton.IsEnabled = false;
             _resultBox.Text = "Запрос...";
             try
             {
-                // .NET Framework может не поднять TLS 1.2 сам по себе в хостовом процессе клиента.
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 var config = ServerConfig.Load();
@@ -64,7 +70,7 @@ namespace ExternalApiPlugin
                 using (var response = await client.PostAsync(url, null))
                 {
                     var body = await response.Content.ReadAsStringAsync();
-                    _resultBox.Text = $"Id объекта: {_objectId}\r\n\r\nHTTP {(int)response.StatusCode} {response.ReasonPhrase}\r\n\r\nОтвет сервера:\r\n{body}";
+                    _resultBox.Text = FormatResult(response.StatusCode, response.ReasonPhrase, body);
                 }
             }
             catch (Exception ex)
@@ -73,8 +79,33 @@ namespace ExternalApiPlugin
             }
             finally
             {
-                _requestButton.Enabled = true;
+                _requestButton.IsEnabled = true;
             }
+        }
+
+        private static string FormatResult(HttpStatusCode statusCode, string reasonPhrase, string body)
+        {
+            var header = $"HTTP {(int)statusCode} {reasonPhrase}";
+
+            try
+            {
+                using (var doc = JsonDocument.Parse(body))
+                {
+                    var root = doc.RootElement;
+                    if (root.TryGetProperty("path", out var pathProp) && pathProp.ValueKind == JsonValueKind.String)
+                    {
+                        var path = pathProp.GetString();
+                        var idText = root.TryGetProperty("id", out var idProp) ? idProp.ToString() : "?";
+                        return $"{header}\r\n\r\nId отчёта: {idText}\r\nПолный путь до отчёта: {path}";
+                    }
+                }
+            }
+            catch (JsonException)
+            {
+                // Ответ не JSON или без поля path — показываем тело как есть ниже.
+            }
+
+            return $"{header}\r\n\r\nОтвет сервера:\r\n{body}";
         }
     }
 }
