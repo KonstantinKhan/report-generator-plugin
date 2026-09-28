@@ -31,7 +31,10 @@ SDK-style csproj (`<Project Sdk="Microsoft.NET.Sdk">`), а не классиче
       <HintPath>$(LoodsmanClientDir)Ascon.Plm.Loodsman.PluginSDK.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 </Project>
@@ -61,7 +64,7 @@ dotnet build ExternalApiPlugin/ExternalApiPlugin.csproj -c Debug
 
 1. Скопировать `ExternalApiPlugin.dll` в `%ProgramData%\Ascon\Loodsman\PluginStore\ExternalApiPlugin\` (копировать саму `Ascon.Plm.Loodsman.PluginSDK.dll` не нужно — она уже есть рядом с клиентом, референс собран с `<Private>false</Private>`, т.е. не копируется в выходную папку).
 2. В клиенте ЛОЦМАН, в настройках подключения к базе, найти список подключаемых плагинов (чекбоксы) и включить `ExternalApiPlugin`.
-3. Переподключиться к базе — пункт меню "Внешний API → Тестовый запрос" появится на панели.
+3. Переподключиться к базе — пункт меню "Отчёты → Выбрать отчёт" появится на панели.
 
 Никакого отдельного XML/ini-манифеста для регистрации плагина не требуется — подробнее см. [Loodsman-Plugin-SDK](Loodsman-Plugin-SDK.md#регистрация-в-ui).
 

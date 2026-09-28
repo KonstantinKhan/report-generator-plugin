@@ -37,7 +37,7 @@
 ## Как это использовано в проекте
 
 ```csharp
-menu.AddMenuItem("Внешний API#Тестовый запрос", OpenExternalApiForm,
+menu.AddMenuItem("Отчёты#Выбрать отчёт", OpenExternalApiForm,
     arg => arg?.PluginCall?.IdVersion > 0);
 
 private void OpenExternalApiForm(INetPluginCall call)
