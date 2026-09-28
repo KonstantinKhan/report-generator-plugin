@@ -4,3 +4,6 @@
 
 # IDE (nested project folder only; root .vscode/ with tasks.json is tracked intentionally)
 ExternalApiPlugin/.vscode/
+
+# Local IDE settings
+.vscode/settings.json
