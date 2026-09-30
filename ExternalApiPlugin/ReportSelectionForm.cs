@@ -28,8 +28,7 @@ namespace ExternalApiPlugin
 
             var stackPanel = new StackPanel
             {
-                Orientation = Orientation.Vertical,
-                Spacing = 8
+                Orientation = Orientation.Vertical
             };
 
             var reportTypes = new[]
@@ -50,7 +49,8 @@ namespace ExternalApiPlugin
                 {
                     Content = ReportTypeNames.GetName(reportType),
                     Padding = new Thickness(12, 8, 12, 8),
-                    Height = 40
+                    Height = 40,
+                    Margin = new Thickness(0, 0, 0, 8)
                 };
                 button.Click += (s, e) => OpenReport(reportType);
                 stackPanel.Children.Add(button);
@@ -62,10 +62,8 @@ namespace ExternalApiPlugin
 
         private void OpenReport(ReportType reportType)
         {
-            using (var form = new ExternalApiForm(_objectId, reportType))
-            {
-                form.ShowDialog();
-            }
+            var form = new ExternalApiForm(_objectId, reportType);
+            form.ShowDialog();
         }
     }
 }

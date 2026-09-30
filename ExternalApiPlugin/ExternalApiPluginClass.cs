@@ -14,10 +14,8 @@ namespace ExternalApiPlugin
         private void OpenReportSelectionForm(INetPluginCall call)
         {
             var objectId = call.PluginCall.IdVersion;
-            using (var form = new ReportSelectionForm(objectId))
-            {
-                form.ShowDialog();
-            }
+            var form = new ReportSelectionForm(objectId);
+            form.ShowDialog();
         }
 
         public void OnConnectToDb(INetPluginCall call)
