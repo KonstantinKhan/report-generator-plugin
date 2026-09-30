@@ -8,38 +8,13 @@ namespace ExternalApiPlugin
     {
         public void BindMenu(IMenuDefinition menu)
         {
-            Func<INetPluginCall, bool> enabledCondition = arg => arg?.PluginCall?.IdVersion > 0;
-
-            menu.AddMenuItem("Отчеты#Спецификация с ПЗ",
-                call => OpenReportForm(call, ReportType.SpecificationWithPZ),
-                enabledCondition);
-            menu.AddMenuItem("Отчеты#Спецификация без ПЗ",
-                call => OpenReportForm(call, ReportType.SpecificationWithoutPZ),
-                enabledCondition);
-            menu.AddMenuItem("Отчеты#Групповая спецификация с ПЗ",
-                call => OpenReportForm(call, ReportType.GroupSpecificationWithPZ),
-                enabledCondition);
-            menu.AddMenuItem("Отчеты#Групповая спецификация без ПЗ",
-                call => OpenReportForm(call, ReportType.GroupSpecificationWithoutPZ),
-                enabledCondition);
-            menu.AddMenuItem("Отчеты#Ведомость покупных изделий без ПЗ",
-                call => OpenReportForm(call, ReportType.PurchasedItemsWithoutPZ),
-                enabledCondition);
-            menu.AddMenuItem("Отчеты#Ведомость покупных изделий с ПЗ",
-                call => OpenReportForm(call, ReportType.PurchasedItemsWithPZ),
-                enabledCondition);
-            menu.AddMenuItem("Отчеты#Ведомость спецификаций без ПЗ",
-                call => OpenReportForm(call, ReportType.SpecificationsListWithoutPZ),
-                enabledCondition);
-            menu.AddMenuItem("Отчеты#Ведомость спецификаций с ПЗ",
-                call => OpenReportForm(call, ReportType.SpecificationsListWithPZ),
-                enabledCondition);
+            menu.AddMenuItem("Отчеты#Выбрать отчёт", OpenReportSelectionForm, arg => arg?.PluginCall?.IdVersion > 0);
         }
 
-        private void OpenReportForm(INetPluginCall call, ReportType reportType)
+        private void OpenReportSelectionForm(INetPluginCall call)
         {
             var objectId = call.PluginCall.IdVersion;
-            using (var form = new ExternalApiForm(objectId, reportType))
+            using (var form = new ReportSelectionForm(objectId))
             {
                 form.ShowDialog();
             }
