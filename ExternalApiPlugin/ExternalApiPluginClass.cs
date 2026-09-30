@@ -1,4 +1,5 @@
 using Ascon.Plm.Loodsman.PluginSDK;
+using System;
 
 namespace ExternalApiPlugin
 {
@@ -7,7 +8,7 @@ namespace ExternalApiPlugin
     {
         public void BindMenu(IMenuDefinition menu)
         {
-            var enabledCondition = (arg) => arg?.PluginCall?.IdVersion > 0;
+            Func<INetPluginCall, bool> enabledCondition = arg => arg?.PluginCall?.IdVersion > 0;
 
             menu.AddMenuItem("Отчеты#Спецификация с ПЗ",
                 call => OpenReportForm(call, ReportType.SpecificationWithPZ),
