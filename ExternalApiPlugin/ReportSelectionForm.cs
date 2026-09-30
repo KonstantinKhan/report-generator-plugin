@@ -1,9 +1,11 @@
 using System;
-using System.Windows.Forms;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace ExternalApiPlugin
 {
-    internal class ReportSelectionForm : Form
+    internal class ReportSelectionForm : Window
     {
         private readonly long _objectId;
 
@@ -11,19 +13,23 @@ namespace ExternalApiPlugin
         {
             _objectId = objectId;
 
-            Text = "Выбрать отчёт";
-            Width = 480;
-            Height = 400;
-            StartPosition = FormStartPosition.CenterScreen;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
+            Title = "Выбрать отчёт";
+            Width = 560;
+            Height = 500;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            FontFamily = new FontFamily("Segoe UI");
+            FontSize = 13;
 
-            var panel = new TableLayoutPanel
+            var scrollViewer = new ScrollViewer
             {
-                Dock = DockStyle.Fill,
-                Padding = new Padding(12),
-                AutoScroll = true,
-                ColumnCount = 1
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                Padding = new Thickness(16)
+            };
+
+            var stackPanel = new StackPanel
+            {
+                Orientation = Orientation.Vertical,
+                Spacing = 8
             };
 
             var reportTypes = new[]
@@ -42,16 +48,16 @@ namespace ExternalApiPlugin
             {
                 var button = new Button
                 {
-                    Text = ReportTypeNames.GetName(reportType),
-                    Height = 40,
-                    Dock = DockStyle.Top,
-                    Margin = new Padding(0, 4, 0, 4)
+                    Content = ReportTypeNames.GetName(reportType),
+                    Padding = new Thickness(12, 8, 12, 8),
+                    Height = 40
                 };
                 button.Click += (s, e) => OpenReport(reportType);
-                panel.Controls.Add(button);
+                stackPanel.Children.Add(button);
             }
 
-            Controls.Add(panel);
+            scrollViewer.Content = stackPanel;
+            Content = scrollViewer;
         }
 
         private void OpenReport(ReportType reportType)
