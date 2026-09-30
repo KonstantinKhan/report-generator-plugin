@@ -2,7 +2,7 @@
 
 # ExternalApiPlugin — устройство плагина
 
-Проект: `ExternalApiPlugin/`. Два класса.
+Проект: `ExternalApiPlugin/`. Четыре основных класса: `ExternalApiPluginClass`, `ReportSelectionForm`, `ExternalApiForm`, `ReportType`.
 
 ## ExternalApiPluginClass
 
@@ -14,17 +14,15 @@ public class ExternalApiPluginClass : ILoodsmanNetPlugin
 {
     public void BindMenu(IMenuDefinition menu)
     {
-        menu.AddMenuItem("Внешний API#Тестовый запрос", OpenExternalApiForm,
+        menu.AddMenuItem("Отчеты#Выбрать отчёт", OpenReportSelectionForm, 
             arg => arg?.PluginCall?.IdVersion > 0);
     }
 
-    private void OpenExternalApiForm(INetPluginCall call)
+    private void OpenReportSelectionForm(INetPluginCall call)
     {
         var objectId = call.PluginCall.IdVersion;
-        using (var form = new ExternalApiForm(objectId))
-        {
-            form.ShowDialog();
-        }
+        var form = new ReportSelectionForm(objectId);
+        form.ShowDialog();
     }
 
     public void OnConnectToDb(INetPluginCall call) { }
@@ -36,28 +34,56 @@ public class ExternalApiPluginClass : ILoodsmanNetPlugin
 
 Ключевые решения:
 
-- Пункт меню `"Внешний API#Тестовый запрос"` активен только когда в дереве ЛОЦМАН что-то выделено (`IdVersion > 0`) — иначе id передавать некуда, и пункт должен быть недоступен. Подробности про `IdVersion` — в [IPluginCall-And-Object-Id](IPluginCall-And-Object-Id.md).
-- По клику плагин не делает HTTP-запрос напрямую, а открывает модальную форму (`ExternalApiForm.ShowDialog()`), передав туда id объекта. Так реализовано осознанно: изначально был вариант "запрос сразу по клику меню", но заменён на UI-окно с явной кнопкой отправки — это будущая точка роста для показа статуса/деталей запроса пользователю.
+- Пункт меню `"Отчеты#Выбрать отчёт"` активен только когда в дереве ЛОЦМАН что-то выделено (`IdVersion > 0`) — иначе id передавать некуда, и пункт должен быть недоступен. Подробности про `IdVersion` — в [IPluginCall-And-Object-Id](IPluginCall-And-Object-Id.md).
+- По клику плагин открывает диалог выбора типа отчёта (`ReportSelectionForm`), а не требует выбор через раскрывающееся меню — чище UI, иконки и текст в одном месте.
+- WPF Window вместо WinForms Form — современнее, XAML-friendly, лучше интеграция с `System.Windows`.
 - `OnConnectToDb`/`OnCloseDb`/`PluginLoad`/`PluginUnload` пока пустые — задел под будущую логику (например, кеширование состояния между вызовами, как в примере `FirstSampleClass` с флагом `_isAdmin`), сейчас не нужны.
+
+## ReportSelectionForm
+
+WPF-окно (`internal class ReportSelectionForm : Window`) для выбора типа отчёта. Содержит вертикальный список (StackPanel) с 8 кнопками для всех типов отчётов:
+- Спецификация изделия с ПЗ ГОСТ Р 2.106-2019
+- Спецификация изделия без ПЗ ГОСТ Р 2.106-2019
+- Групповая спецификация с ПЗ ГОСТ 2.113-75
+- Групповая спецификация без ПЗ ГОСТ 2.113-75
+- Ведомость покупных изделий без ПЗ ГОСТ Р 2.106-2019
+- Ведомость покупных изделий с ПЗ ГОСТ Р 2.106-2019
+- Ведомость спецификаций без ПЗ ГОСТ Р 2.106-2019
+- Ведомость спецификаций с ПЗ ГОСТ Р 2.106-2019
+
+При клике на кнопку открывает `ExternalApiForm` с соответствующим типом отчёта.
+
+## ReportType
+
+Enum с 8 типами отчётов и вспомогательный класс `ReportTypeNames` с методом `GetName(type)` для получения отображаемого названия каждого типа.
 
 ## ExternalApiForm
 
-WinForms-форма (`internal class ExternalApiForm : Form`), собранная кодом без designer-файла — три контрола: `Label` с id объекта, `Button` "Отправить на сервер", `TextBox` (multiline, read-only) с результатом.
+WPF-окно (`internal class ExternalApiForm : Window`) для отправки отчёта на сервер. Содержит кнопку "Отправить на сервер" и TextBox с результатом запроса.
 
 ```csharp
-public ExternalApiForm(long objectId)
+public ExternalApiForm(long objectId, ReportType reportType)
 {
     _objectId = objectId;
-    // ... создание Label/Button/TextBox
+    _reportType = reportType;
+
+    Title = ReportTypeNames.GetName(reportType);
+    // ... WPF Grid с Button и TextBox
     _requestButton.Click += RequestButton_Click;
 }
 
-private async void RequestButton_Click(object sender, EventArgs e)
+private async void RequestButton_Click(object sender, RoutedEventArgs e)
 {
-    _requestButton.Enabled = false;
+    _requestButton.IsEnabled = false;
     _resultBox.Text = "Запрос...";
     try
     {
+        if (_reportType != ReportType.SpecificationWithoutPZ)
+        {
+            _resultBox.Text = $"{ReportTypeNames.GetName(_reportType)}\r\n\r\nЭтот отчёт находится в процессе разработки.";
+            return;
+        }
+
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
         var config = ServerConfig.Load();
@@ -67,7 +93,7 @@ private async void RequestButton_Click(object sender, EventArgs e)
         using (var response = await client.PostAsync(url, null))
         {
             var body = await response.Content.ReadAsStringAsync();
-            _resultBox.Text = $"Id объекта: {_objectId}\r\n\r\nHTTP {(int)response.StatusCode} {response.ReasonPhrase}\r\n\r\nОтвет сервера:\r\n{body}";
+            _resultBox.Text = FormatResult(response.StatusCode, response.ReasonPhrase, body);
         }
     }
     catch (Exception ex)
@@ -76,17 +102,19 @@ private async void RequestButton_Click(object sender, EventArgs e)
     }
     finally
     {
-        _requestButton.Enabled = true;
+        _requestButton.IsEnabled = true;
     }
 }
 ```
 
 Важные детали реализации:
 
-- **Асинхронность.** Обработчик клика — `async void`, запрос идёт через `await client.PostAsync(...)`, а не через блокирующий `.Result`. Первая версия плагина делала синхронный вызов прямо в обработчике меню — рабочий вариант, но блокирующий UI-поток клиента на время запроса; после перехода на форму с кнопкой сделали правильно сразу.
-- **`ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12`.** Явно выставляется перед каждым запросом. На .NET Framework в хостовом процессе стороннего приложения (клиента ЛОЦМАН) нет гарантии, что TLS 1.2 включён по умолчанию — без этой строки HTTPS-запросы к серверам, требующим TLS 1.2+, могут падать на этапе handshake. В нашем случае реальная ошибка оказалась сетевой (см. [Network-Constraints](Network-Constraints.md)), а не TLS-й, но защита от этого класса проблем оставлена.
-- **`POST {versionId}` в пути, не query-параметр.** Реальный сервер (`report-generator/report-server`, Ktor) отдаёт `POST /specifications/{versionId}` — id выделенного в ЛОЦМАН объекта подставляется в path, не в query. Ответ сервера — JSON `{id, path}` (id сгенерированного PDF и путь к нему на диске сервера), плагин просто показывает тело ответа как есть.
-- **`ServerConfig`** (`ExternalApiPlugin/ServerConfig.cs`) читает `server-config.json` рядом со сборкой (`System.Text.Json`) и собирает конечный URL. Раньше адрес сервера был захардкожен константой `ApiBaseUrl` прямо в `ExternalApiForm.cs` — вынесен в JSON, чтобы менять адрес/маршрут/таймаут без пересборки. Поля конфига:
+- **WPF вместо WinForms.** Окно наследует `Window` из `System.Windows`, layout собран через `Grid` с `RowDefinitions`. UI современнее, лучше масштабируется, проще интегрировать визуальные эффекты.
+- **Поддержка типов отчётов.** Конструктор принимает `ReportType`, заголовок окна показывает название отчёта. Для всех типов кроме `SpecificationWithoutPZ` показывается заглушка "в разработке" — это позволит добавлять поддержку новых типов на сервере без изменений клиента.
+- **Асинхронность.** Обработчик клика — `async void`, запрос идёт через `await client.PostAsync(...)`, а не через блокирующий `.Result`. Это не блокирует UI-поток клиента на время запроса.
+- **`ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12`.** Явно выставляется перед каждым запросом. На .NET Framework в хостовом процессе стороннего приложения нет гарантии, что TLS 1.2 включён по умолчанию.
+- **Форматирование результата.** Метод `FormatResult()` парсит JSON ответ и вытягивает поля `id` и `path` для показа пользователю; если ответ не JSON — показывает как есть.
+- **`ServerConfig`** (`ExternalApiPlugin/ServerConfig.cs`) читает `server-config.json` и собирает URL. Адрес сервера вынесен в JSON, чтобы менять его без пересборки. Поля конфига:
 
   ```json
   {
@@ -97,8 +125,8 @@ private async void RequestButton_Click(object sender, EventArgs e)
   }
   ```
 
-  `{versionId}` в `specificationEndpoint` подставляется `_objectId` плагина. `healthEndpoint` пока не используется кодом — зарезервирован под будущую проверку доступности сервера (`GET /health`). Файл копируется в output через `CopyToOutputDirectory=PreserveNewest` (правка в `.csproj`), поэтому редактируется прямо рядом с `.dll` в `PluginStore` без пересборки.
-- **Для реального использования** нужно поменять `baseUrl` в `server-config.json` на боевой адрес — сейчас указывает на локальный тестовый сервер (см. [Local-Testing](Local-Testing.md)), потому что прямой интернет с рабочей машины закрыт (см. [Network-Constraints](Network-Constraints.md)).
+  `{versionId}` подставляется id объекта. `healthEndpoint` пока не используется — зарезервирован под проверку доступности. Файл копируется в output через `CopyToOutputDirectory=PreserveNewest` в `.csproj`, редактируется рядом с `.dll` без пересборки.
+- **Для реального использования** нужно поменять `baseUrl` в `server-config.json` на боевой адрес (см. [Local-Testing](Local-Testing.md), [Network-Constraints](Network-Constraints.md)).
 
 ## См. также
 

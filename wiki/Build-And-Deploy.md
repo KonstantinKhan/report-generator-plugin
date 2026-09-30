@@ -31,11 +31,18 @@ SDK-style csproj (`<Project Sdk="Microsoft.NET.Sdk">`), а не классиче
       <HintPath>$(LoodsmanClientDir)Ascon.Plm.Loodsman.PluginSDK.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Reference Include="System.Windows.Forms" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 </Project>
 ```
+
+Примечание про WPF: плагин использует WPF (`System.Windows`) вместо WinForms. Это требует добавления `PresentationFramework`, `PresentationCore`, `WindowsBase` и `System.Xaml` в Reference. На .NET Framework эти сборки входят в состав, но нужно явно указать в `.csproj` для корректной сборки.
+
+WPF `Window` (в отличие от WinForms `Form`) не наследует `IDisposable` — не нужно оборачивать в `using`. StackPanel не поддерживает свойство `Spacing` (это WinUI-only) — используем `Margin` на кнопках вместо этого.
 
 Почему так, а не классический `.csproj` с явным списком `<Compile Include>`:
 

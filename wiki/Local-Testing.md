@@ -52,7 +52,7 @@ python tools\test_server.py
 }
 ```
 
-⚠️ **Рассинхронизация с `tools/test_server.py`.** Плагин теперь шлёт `POST /specifications/{versionId}` (id объекта — в пути), а не `GET /?objectId=...`. `tools/test_server.py` до сих пор реализует только `do_GET` с `objectId` в query — под текущий формат запроса плагина не подходит, запрос вернёт 404. Для локальной проверки нужно либо поднять реальный `report-generator/report-server` (Kotlin/Ktor, роуты `GET /health` и `POST /specifications/{versionId}`, слушает `127.0.0.1:8080` по умолчанию — см. `AppConfig.kt`), либо доработать `test_server.py` под `POST`/path-параметр. Актуализация `test_server.py` — на этот момент не сделана.
+⚠️ **Рассинхронизация с `tools/test_server.py`.** Плагин шлёт `POST /specifications/{versionId}` (id объекта — в пути), а `test_server.py` реализует только `do_GET` с `objectId` в query — не подходит. Для локальной проверки нужно либо поднять реальный `report-generator/report-server` (Kotlin/Ktor, роуты `GET /health` и `POST /specifications/{versionId}`, слушает `127.0.0.1:8080` по умолчанию), либо доработать `test_server.py`.
 
 Подробнее про поток данных — в [ExternalApiPlugin](ExternalApiPlugin.md).
 
