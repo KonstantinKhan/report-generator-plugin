@@ -8,14 +8,16 @@ namespace ExternalApiPlugin
     internal class ExternalApiForm : Form
     {
         private readonly long _objectId;
+        private readonly ReportType _reportType;
         private readonly Button _requestButton;
         private readonly TextBox _resultBox;
 
-        public ExternalApiForm(long objectId)
+        public ExternalApiForm(long objectId, ReportType reportType)
         {
             _objectId = objectId;
+            _reportType = reportType;
 
-            Text = "Запрос к внешнему API";
+            Text = $"Генерация отчёта: {ReportTypeNames.GetName(reportType)}";
             Width = 480;
             Height = 340;
             StartPosition = FormStartPosition.CenterScreen;
@@ -58,7 +60,7 @@ namespace ExternalApiPlugin
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 var config = ServerConfig.Load();
-                var url = config.BuildSpecificationUrl(_objectId);
+                var url = config.BuildReportUrl(_objectId, _reportType);
 
                 using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds) })
                 using (var response = await client.PostAsync(url, null))
