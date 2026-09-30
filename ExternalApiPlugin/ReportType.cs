@@ -26,18 +26,5 @@ namespace ExternalApiPlugin
             ReportType.SpecificationsListWithPZ => "Ведомость спецификаций с ПЗ ГОСТ Р 2.106-2019",
             _ => "Неизвестный тип отчёта"
         };
-
-        public static string GetEndpoint(ReportType type) => type switch
-        {
-            ReportType.SpecificationWithPZ => "specification-with-pz",
-            ReportType.SpecificationWithoutPZ => "specification-without-pz",
-            ReportType.GroupSpecificationWithPZ => "group-specification-with-pz",
-            ReportType.GroupSpecificationWithoutPZ => "group-specification-without-pz",
-            ReportType.PurchasedItemsWithoutPZ => "purchased-items-without-pz",
-            ReportType.PurchasedItemsWithPZ => "purchased-items-with-pz",
-            ReportType.SpecificationsListWithoutPZ => "specifications-list-without-pz",
-            ReportType.SpecificationsListWithPZ => "specifications-list-with-pz",
-            _ => "unknown"
-        };
     }
 }

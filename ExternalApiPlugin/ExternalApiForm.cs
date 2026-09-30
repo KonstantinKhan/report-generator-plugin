@@ -56,11 +56,17 @@ namespace ExternalApiPlugin
             _resultBox.Text = "Запрос...";
             try
             {
+                if (_reportType != ReportType.SpecificationWithoutPZ)
+                {
+                    _resultBox.Text = $"{ReportTypeNames.GetName(_reportType)}\r\n\r\nЭтот отчёт находится в процессе разработки.";
+                    return;
+                }
+
                 // .NET Framework может не поднять TLS 1.2 сам по себе в хостовом процессе клиента.
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 var config = ServerConfig.Load();
-                var url = config.BuildReportUrl(_objectId, _reportType);
+                var url = config.BuildSpecificationUrl(_objectId);
 
                 using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds) })
                 using (var response = await client.PostAsync(url, null))

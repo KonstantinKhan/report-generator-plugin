@@ -28,13 +28,6 @@ namespace ExternalApiPlugin
             return new Uri(new Uri(BaseUrl), path);
         }
 
-        public Uri BuildReportUrl(long versionId, ReportType reportType)
-        {
-            var endpoint = ReportTypeNames.GetEndpoint(reportType);
-            var path = $"reports/{endpoint}/{versionId}";
-            return new Uri(new Uri(BaseUrl), path);
-        }
-
         public static ServerConfig Load()
         {
             var assemblyDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
