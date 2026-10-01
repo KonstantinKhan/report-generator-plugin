@@ -72,7 +72,7 @@ namespace ExternalApiPlugin
             _resultBox.Text = "Запрос...";
             try
             {
-                if (_reportType != ReportType.SpecificationWithoutPZ)
+                if (_reportType != ReportType.SpecificationWithPZ && _reportType != ReportType.SpecificationWithoutPZ)
                 {
                     _resultBox.Text = $"{ReportTypeNames.GetName(_reportType)}\r\n\r\nЭтот отчёт находится в процессе разработки.";
                     return;
@@ -81,7 +81,7 @@ namespace ExternalApiPlugin
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 var config = ServerConfig.Load();
-                var url = config.BuildSpecificationUrl(_objectId);
+                var url = config.BuildSpecificationUrl(_objectId, _reportType);
 
                 using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds) })
                 using (var response = await client.PostAsync(url, null))

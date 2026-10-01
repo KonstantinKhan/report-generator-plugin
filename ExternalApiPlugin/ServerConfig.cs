@@ -22,10 +22,18 @@ namespace ExternalApiPlugin
         [JsonPropertyName("timeoutSeconds")]
         public int TimeoutSeconds { get; set; } = 30;
 
-        public Uri BuildSpecificationUrl(long versionId)
+        public Uri BuildSpecificationUrl(long versionId, ReportType reportType = ReportType.SpecificationWithPZ)
         {
             var path = SpecificationEndpoint.Replace("{versionId}", versionId.ToString());
-            return new Uri(new Uri(BaseUrl), path);
+            var baseUri = new Uri(new Uri(BaseUrl), path);
+
+            var customerRepresentative = reportType == ReportType.SpecificationWithPZ ? "true" : "false";
+            var uriBuilder = new UriBuilder(baseUri)
+            {
+                Query = $"customerRepresentative={customerRepresentative}"
+            };
+
+            return uriBuilder.Uri;
         }
 
         public static ServerConfig Load()
