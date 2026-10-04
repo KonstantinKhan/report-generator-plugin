@@ -198,6 +198,12 @@ namespace ExternalApiPlugin
 
             try
             {
+                // 0 — клиент вызвал плагин вне рабочего проекта (просмотр базы), UpFileById там не работает.
+                var checkOutId = _call.PluginCall.CheckOut;
+                Log($"PluginCall.CheckOut = {checkOutId}" + (checkOutId == 0
+                    ? " (объект не в рабочем проекте: возьмите его в работу и запустите плагин из окна рабочего проекта)"
+                    : string.Empty));
+
                 var result = LoodsmanFileUploader.UpFileById(_call, _objectId, _fileNameBox.Text, _filePathBox.Text, _reportPdf);
                 Log($"UpFileById(id={_objectId}, имя='{_fileNameBox.Text}', путь='{_filePathBox.Text}') выполнен.\r\n{result}");
             }
