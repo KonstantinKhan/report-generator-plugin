@@ -29,6 +29,8 @@ namespace ExternalApiPlugin
         private IntPtr _clientHwnd;
         private long _lastKey = -1;
         private bool _saved;
+        private TargetInfo _target;
+        private SaveAssessment _assessment = SaveAssessment.Refuse("объект не выбран");
         private bool _closed;
 
         [DllImport("user32.dll")] private static extern bool IsIconic(IntPtr hWnd);
@@ -149,11 +151,15 @@ namespace ExternalApiPlugin
                     return;
                 }
 
-                var target = LoodsmanFileUploader.GetTargetInfo(call, id);
-                var reason = target?.RefusalReason(checkOut);
+                _target = LoodsmanFileUploader.GetTargetInfo(call, id);
+                _assessment = _target?.Assess(checkOut) ?? SaveAssessment.Direct;
+                var title = _target?.Title ?? "id " + id;
                 SetState(
-                    reason == null ? $"Можно сохранить в: {target?.Title ?? "id " + id}" : $"Нельзя сохранить: {reason}.",
-                    reason == null);
+                    !_assessment.CanSave ? $"Нельзя сохранить: {_assessment.Reason}."
+                        : _assessment.Mode == SaveMode.AutoCheckOut ? $"Можно сохранить в: {title}.\nДокумент не в работе: будет взят в работу и сразу сохранён в базу (check-in)."
+                        : $"Можно сохранить в: {title}",
+                    _assessment.CanSave);
+                _saveButton.Content = _assessment.Mode == SaveMode.AutoCheckOut ? "Взять в работу и сохранить" : "Сохранить";
             }
             catch (Exception ex)
             {
@@ -220,13 +226,13 @@ namespace ExternalApiPlugin
             try
             {
                 var id = _call.PluginCall.IdVersion;
-                LoodsmanFileUploader.UpFileById(_call, id, report.FileName, string.Empty, report.Data);
+                LoodsmanFileUploader.SaveToDocument(_call, id, _target, _assessment.Mode, report.FileName, report.Data);
                 PendingReport.Clear();
                 _saved = true;
 
                 // Без MessageBox: диалог с владельцем-панелью, которая тут же закрывается, сворачивал клиент.
                 _timer.Stop();
-                SetState($"✓ Файл «{report.FileName}» добавлен (id объекта {id}). Изменения станут видны после сохранения рабочего проекта.", false);
+                SetState($"✓ Файл «{report.FileName}» добавлен (id объекта {id}). " + (_assessment.Mode == SaveMode.Direct ? "Изменения станут видны после сохранения рабочего проекта." : "Документ сохранён в базу."), false);
                 _cancelButton.Content = "Закрыть";
                 var closeTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2.5) };
                 closeTimer.Tick += (s2, e2) =>

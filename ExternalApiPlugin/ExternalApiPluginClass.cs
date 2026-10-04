@@ -44,7 +44,7 @@ namespace ExternalApiPlugin
             try
             {
                 var target = LoodsmanFileUploader.GetTargetInfo(call, call.PluginCall.IdVersion);
-                return target == null || target.RefusalReason(call.PluginCall.CheckOut) == null;
+                return target == null || target.Assess(call.PluginCall.CheckOut).CanSave;
             }
             catch (Exception)
             {
@@ -65,22 +65,27 @@ namespace ExternalApiPlugin
             {
                 var idVersion = call.PluginCall.IdVersion;
                 var target = LoodsmanFileUploader.GetTargetInfo(call, idVersion);
-                var reason = target?.RefusalReason(call.PluginCall.CheckOut);
-                if (reason != null)
+                var assessment = target?.Assess(call.PluginCall.CheckOut) ?? SaveAssessment.Direct;
+                if (!assessment.CanSave)
                 {
-                    MessageBox.Show($"Сохранить нельзя: {reason}.", "Сохранить отчёт", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show($"Сохранить нельзя: {assessment.Reason}.", "Сохранить отчёт", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
                 var title = target?.Title ?? $"id {idVersion}";
-                var question = $"Прикрепить файл «{report.FileName}» ({report.Data.Length} байт, сформирован {report.CreatedAt:HH:mm:ss}) к документу:\n{title}?";
+                var question = $"Прикрепить файл «{report.FileName}» ({report.Data.Length} байт, сформирован {report.CreatedAt:HH:mm:ss}) к документу:\n{title}?"
+                    + (assessment.Mode == SaveMode.AutoCheckOut ? "\n\nДокумент будет взят в работу и сразу сохранён в базу (check-in)." : string.Empty);
                 if (MessageBox.Show(question, "Сохранить отчёт", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
                 {
                     return;
                 }
 
-                LoodsmanFileUploader.UpFileById(call, idVersion, report.FileName, string.Empty, report.Data);
-                MessageBox.Show($"Файл «{report.FileName}» добавлен к документу {title}.\nИзменения станут видны после сохранения рабочего проекта.", "Сохранить отчёт");
+                LoodsmanFileUploader.SaveToDocument(call, idVersion, target, assessment.Mode, report.FileName, report.Data);
+                var done = $"Файл «{report.FileName}» добавлен к документу {title}.";
+                done += assessment.Mode == SaveMode.Direct
+                    ? "\nИзменения станут видны после сохранения рабочего проекта."
+                    : "\nДокумент сохранён в базу.";
+                MessageBox.Show(done, "Сохранить отчёт");
             }
             catch (Exception ex)
             {
