@@ -9,7 +9,11 @@ namespace ExternalApiPlugin
     {
         public void BindMenu(IMenuDefinition menu)
         {
-            menu.AddMenuItem("Отчеты#Выбрать отчёт", OpenReportSelectionForm, arg => arg?.PluginCall?.IdVersion > 0);
+            menu.AddMenuItem("Отчеты#Выбрать отчёт", OpenReportSelectionForm, arg =>
+            {
+                ReportSaveBar.NotifySelection(arg);
+                return arg?.PluginCall?.IdVersion > 0;
+            });
             menu.AddMenuItem("Отчеты#Сохранить отчёт в выбранный документ", SavePendingReport, CanSavePendingReport);
         }
 
@@ -18,12 +22,20 @@ namespace ExternalApiPlugin
             var objectId = call.PluginCall.IdVersion;
             var form = new ReportSelectionForm(objectId, call);
             form.ShowDialog();
+
+            // Пользователь выбрал «сохранить в другой документ»: окна закрыты, остаётся плавающая панель.
+            if (form.SaveRequested)
+            {
+                ReportSaveBar.ShowFor(call);
+            }
         }
 
         // Пункт активен, только если есть отчёт, ожидающий сохранения, и выбранный объект принимает файл.
         // Сбой самой проверки (нет колонки, ошибка вызова) не блокирует пункт: причину покажет команда.
         private static bool CanSavePendingReport(INetPluginCall call)
         {
+            ReportSaveBar.NotifySelection(call);
+
             if (PendingReport.Current == null || call?.PluginCall == null || call.PluginCall.IdVersion <= 0)
             {
                 return false;

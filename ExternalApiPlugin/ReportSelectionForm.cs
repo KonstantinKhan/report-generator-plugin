@@ -11,6 +11,8 @@ namespace ExternalApiPlugin
         private readonly long _objectId;
         private readonly INetPluginCall _call;
 
+        public bool SaveRequested { get; private set; }
+
         public ReportSelectionForm(long objectId, INetPluginCall call)
         {
             _objectId = objectId;
@@ -67,6 +69,12 @@ namespace ExternalApiPlugin
         {
             var form = new ExternalApiForm(_objectId, reportType, _call);
             form.ShowDialog();
+
+            if (form.SaveRequested)
+            {
+                SaveRequested = true;
+                Close();
+            }
         }
     }
 }

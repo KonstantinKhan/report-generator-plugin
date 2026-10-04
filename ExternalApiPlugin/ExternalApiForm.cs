@@ -22,6 +22,8 @@ namespace ExternalApiPlugin
         private readonly TextBox _fileNameBox;
         private readonly TextBox _filePathBox;
 
+        public bool SaveRequested { get; private set; }
+
         private string _reportId;
         private byte[] _reportPdf;
 
@@ -65,12 +67,15 @@ namespace ExternalApiPlugin
 
             var saveButton = new Button { Content = "Сохранить на диск…", Padding = new Thickness(12, 6, 12, 6), Margin = new Thickness(0, 0, 8, 0) };
             saveButton.Click += SaveButton_Click;
-            var attachButton = new Button { Content = "Прикрепить к объекту", Padding = new Thickness(12, 6, 12, 6), Margin = new Thickness(0, 0, 8, 0) };
+            var chooseButton = new Button { Content = "Сохранить в документ…", Padding = new Thickness(12, 6, 12, 6), Margin = new Thickness(0, 0, 8, 0) };
+            chooseButton.Click += (s, e) => { SaveRequested = true; Close(); };
+            var attachButton = new Button { Content = "Прикрепить к этому объекту", Padding = new Thickness(12, 6, 12, 6), Margin = new Thickness(0, 0, 8, 0) };
             attachButton.Click += AttachButton_Click;
             var filesButton = new Button { Content = "Файлы объекта", Padding = new Thickness(12, 6, 12, 6) };
             filesButton.Click += FilesButton_Click;
 
             var buttonsRow = new StackPanel { Orientation = Orientation.Horizontal };
+            buttonsRow.Children.Add(chooseButton);
             buttonsRow.Children.Add(saveButton);
             buttonsRow.Children.Add(attachButton);
             buttonsRow.Children.Add(filesButton);
@@ -78,7 +83,7 @@ namespace ExternalApiPlugin
             _actionsPanel = new StackPanel { Margin = new Thickness(0, 12, 0, 0), Visibility = Visibility.Collapsed };
             _actionsPanel.Children.Add(new TextBlock
             {
-                Text = "Чтобы сохранить отчёт в другой документ: закройте это окно, выберите документ в клиенте (он должен быть в рабочем проекте) и выберите «Отчеты → Сохранить отчёт в выбранный документ».",
+                Text = "«Сохранить в документ…» закроет окно и покажет панель «Сохранить / Отмена»: выберите в клиенте документ в рабочем проекте, и кнопка «Сохранить» станет активной.",
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(0, 0, 0, 8)
             });
