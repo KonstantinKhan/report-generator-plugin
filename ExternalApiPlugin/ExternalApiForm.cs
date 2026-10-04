@@ -76,7 +76,13 @@ namespace ExternalApiPlugin
             buttonsRow.Children.Add(filesButton);
 
             _actionsPanel = new StackPanel { Margin = new Thickness(0, 12, 0, 0), Visibility = Visibility.Collapsed };
-            _actionsPanel.Children.Add(new TextBlock { Text = "Имя файла в ЛОЦМАН:" });
+            _actionsPanel.Children.Add(new TextBlock
+            {
+                Text = "Чтобы сохранить отчёт в другой документ: закройте это окно, выберите документ в клиенте (он должен быть в рабочем проекте) и выберите «Отчеты → Сохранить отчёт в выбранный документ».",
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 0, 0, 8)
+            });
+            _actionsPanel.Children.Add(new TextBlock { Text = "Имя файла в ЛОЦМАН (для кнопки ниже):" });
             _actionsPanel.Children.Add(_fileNameBox);
             _actionsPanel.Children.Add(new TextBlock { Text = "Путь файла (относительно рабочего диска, можно пусто):" });
             _actionsPanel.Children.Add(_filePathBox);
@@ -131,6 +137,7 @@ namespace ExternalApiPlugin
                         var pdfUrl = config.BuildReportDownloadUrl(reportId);
                         _reportPdf = await client.GetByteArrayAsync(pdfUrl);
                         _reportId = reportId;
+                        PendingReport.Set($"report-{_objectId}.pdf", _reportPdf, _objectId);
                         _fileNameBox.Text = $"report-{_objectId}.pdf";
                         _actionsPanel.Visibility = Visibility.Visible;
                         _resultBox.Text += $"\r\nОтчёт скачан: {_reportPdf.Length} байт.";
