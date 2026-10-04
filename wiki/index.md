@@ -13,6 +13,7 @@
 | [ExternalApiPlugin](ExternalApiPlugin.md) | Нужно разобраться в устройстве конкретно нашего плагина: классы `ExternalApiPluginClass`/`ExternalApiForm`, куда и как летит id объекта. |
 | [Build-And-Deploy](Build-And-Deploy.md) | Нужно собрать проект (`dotnet build`, VS Code tasks) или установить готовую dll в ЛОЦМАН Клиент (`PluginStore`). |
 | [Local-Testing](Local-Testing.md) | Нужно проверить плагин без реального внешнего сервиса — как поднять и использовать `tools/test_server.py`. |
+| [Attach-Report-Experiment](Attach-Report-Experiment.md) | Нужно понять, как сохранить готовый отчёт в ЛОЦМАН от имени пользователя (ветка-эксперимент) и как это проверить на стенде. |
 | [Network-Constraints](Network-Constraints.md) | Непонятно, почему прямые HTTP-запросы с рабочей машины не проходят, и какие варианты решения есть для продакшена. |
 
 ## Ключевые каталоги репозитория

@@ -1,4 +1,5 @@
 using System;
+using Ascon.Plm.Loodsman.PluginSDK;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -8,10 +9,12 @@ namespace ExternalApiPlugin
     internal class ReportSelectionForm : Window
     {
         private readonly long _objectId;
+        private readonly INetPluginCall _call;
 
-        public ReportSelectionForm(long objectId)
+        public ReportSelectionForm(long objectId, INetPluginCall call)
         {
             _objectId = objectId;
+            _call = call;
 
             Title = "Выбрать отчёт";
             Width = 560;
@@ -62,7 +65,7 @@ namespace ExternalApiPlugin
 
         private void OpenReport(ReportType reportType)
         {
-            var form = new ExternalApiForm(_objectId, reportType);
+            var form = new ExternalApiForm(_objectId, reportType, _call);
             form.ShowDialog();
         }
     }

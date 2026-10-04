@@ -14,7 +14,7 @@ namespace ExternalApiPlugin
         private void OpenReportSelectionForm(INetPluginCall call)
         {
             var objectId = call.PluginCall.IdVersion;
-            var form = new ReportSelectionForm(objectId);
+            var form = new ReportSelectionForm(objectId, call);
             form.ShowDialog();
         }
 

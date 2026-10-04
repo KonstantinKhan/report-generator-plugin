@@ -16,6 +16,9 @@ namespace ExternalApiPlugin
         [JsonPropertyName("specificationEndpoint")]
         public string SpecificationEndpoint { get; set; }
 
+        [JsonPropertyName("reportDownloadEndpoint")]
+        public string ReportDownloadEndpoint { get; set; } = "reports/{reportId}";
+
         [JsonPropertyName("healthEndpoint")]
         public string HealthEndpoint { get; set; }
 
@@ -34,6 +37,12 @@ namespace ExternalApiPlugin
             };
 
             return uriBuilder.Uri;
+        }
+
+        public Uri BuildReportDownloadUrl(string reportId)
+        {
+            var path = ReportDownloadEndpoint.Replace("{reportId}", Uri.EscapeDataString(reportId));
+            return new Uri(new Uri(BaseUrl), path);
         }
 
         public static ServerConfig Load()
