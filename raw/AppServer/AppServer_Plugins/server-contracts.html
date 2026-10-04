@@ -1,0 +1,1039 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="build-anddeploy.html">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="img/fav.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Список интерфейсов сервера приложений, доступных при разработке модулей расширения - Руководство по разработке модулей расширения WEBAPI сервера приложений ЛОЦМАН:PM</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Руководство по разработке модулей расширения WEBAPI сервера приложений ЛОЦМАН:PM" class="md-header__button md-logo" aria-label="Руководство по разработке модулей расширения WEBAPI сервера приложений ЛОЦМАН:PM" data-md-component="logo">
+      
+  <img src="img/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Руководство по разработке модулей расширения WEBAPI сервера приложений ЛОЦМАН:PM
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Список интерфейсов сервера приложений, доступных при разработке модулей расширения
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Руководство по разработке модулей расширения WEBAPI сервера приложений ЛОЦМАН:PM" class="md-nav__button md-logo" aria-label="Руководство по разработке модулей расширения WEBAPI сервера приложений ЛОЦМАН:PM" data-md-component="logo">
+      
+  <img src="img/logo.png" alt="logo">
+
+    </a>
+    Руководство по разработке модулей расширения WEBAPI сервера приложений ЛОЦМАН:PM
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Общая информация о модулях расширения
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Порядок разработки модуля расширения
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Порядок разработки модуля расширения
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="create-project.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Создание и подготовка проекта в Microsoft Visual Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="add-dependences.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Настройка зависимостей проекта
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="add-controller.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Создание контроллера
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="add-server-contracts.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Получение доступа к API сервера
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="add-other-endpoints.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Создание новых методов контроллера
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="build-anddeploy.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Сборка и размещение проекта
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Список интерфейсов сервера приложений, доступных при разработке модулей расширения
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="server-contracts.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Список интерфейсов сервера приложений, доступных при разработке модулей расширения
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Включение анализатора
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Включение анализатора">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Примеры установки переменных окружения
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Использование анализатора
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Фильтрация и поиск
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обозначения статусов
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Как использовать скопированную сигнатуру в плагине
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Еще примеры плагина
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Возможные проблемы
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Возможные проблемы">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Страница загрузилась, но окно браузера пустое
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#404" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Страница анализатора недоступна (404)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Страница открывается, но список контрактов пуст
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Модальное окно не открывается при клике на метод
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Отсутствует описание метода или параметров
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Поиск не находит ожидаемые методы
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Список интерфейсов сервера приложений, доступных при разработке модулей расширения</h1>
+
+<blockquote>
+<p><strong>Информация</strong>  </p>
+<p>Сервер приложений ЛОЦМАН:PLM содержит встроенный анализатор исходного кода, который позволяет разработчикам плагинов просматривать все доступные контракты (API) и сигнатуры их методов в реальном времени. Анализатор отображает полную документацию из XML-комментариев, включая описания методов, параметров, возвращаемых значений и важные примечания.</p>
+</blockquote>
+<h2 id="_1">Включение анализатора</h2>
+<p>Доступ к анализаторам исходного кода контролируется переменной окружения <code>LOODSMAN_SOURCE_CODE_ANALYZATORS</code>.</p>
+<p>Если переменная установлена в значение <code>1</code>, будут доступна конечная точка:</p>
+<ul>
+<li><code>GET /api/v{version}/SourceCodeAnalyzators/contracts</code> — анализ контрактов, доступных для использования в плагинах.</li>
+</ul>
+<p>По умолчанию (если переменная не установлена или имеет значение <code>0</code>) эта конечная точка возвращает пустой ответ с кодом 200.</p>
+<h3 id="_2">Примеры установки переменных окружения</h3>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1"><strong>Windows</strong></label><label for="__tabbed_1_2"><strong>Linux</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<p><div class="language-shell highlight"><span class="filename">Командная строка, с правами администратора</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>setx<span class="w"> </span>LOODSMAN_SOURCE_CODE_ANALYZATORS<span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="w"> </span>/M
+</span></code></pre></div>
+<div class="language-powershell highlight"><span class="filename">PowerShell, с правами администратора</span><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="no">[System.Environment]</span><span class="p">::</span><span class="n">SetEnvironmentVariable</span><span class="p">(</span><span class="s2">&quot;LOODSMAN_SOURCE_CODE_ANALYZATORS&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="no">[System.EnvironmentVariableTarget]</span><span class="p">::</span><span class="n">Machine</span><span class="p">)</span>
+</span></code></pre></div></p>
+</div>
+<div class="tabbed-block">
+<p><div class="language-bash highlight"><span class="filename">Для текущего сеанса</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">LOODSMAN_SOURCE_CODE_ANALYZATORS</span><span class="o">=</span><span class="s2">&quot;1&quot;</span>
+</span></code></pre></div>
+Для всех пользователей - добавьте в файл <strong><code>/etc/environment</code></strong> строку: <code>LOODSMAN_SOURCE_CODE_ANALYZATORS="1"</code>
+Затем перезагрузите систему.</p>
+</div>
+</div>
+</div>
+<blockquote>
+<p><strong>ВАЖНО!</strong>  </p>
+<p>После установки переменной окружения необходимо <strong>перезапустить службу Loodsman AppServer</strong></p>
+</blockquote>
+<h2 id="_3">Использование анализатора</h2>
+<p>1 Откройте в браузере страницу:</p>
+<div class="language-text highlight"><pre><span></span><code>http(s)://&lt;адрес сервера&gt;:&lt;порт&gt;/api/v4/SourceCodeAnalyzators/contracts
+</code></pre></div>
+<blockquote>
+<p><strong>Примечание</strong>     </p>
+<div class="language-text highlight"><pre><span></span><code>Версия API может отличаться. Актуальную версию можно посмотреть в Swagger: `/swagger/index.html`
+</code></pre></div>
+</blockquote>
+<p>2 Вы увидите таблицу со всеми контрактами сервера:</p>
+<p><img alt="Контракты сервера приложений" src="img/server-contracts.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Столбец</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Имя контракта</strong></td>
+<td>Название интерфейса, который можно внедрить в конструктор контроллера</td>
+</tr>
+<tr>
+<td><strong>Имя элемента</strong></td>
+<td>Кликабельное имя метода (🔧) или свойства (📦)</td>
+</tr>
+<tr>
+<td><strong>Описание</strong></td>
+<td>Краткое описание из XML-документации (обрезано до 2 строк, полный текст в модальном окне)</td>
+</tr>
+<tr>
+<td><strong>В Web API</strong></td>
+<td>✅ — метод доступен для вызова через Web API (помечен <code>[InWebApi]</code>)</td>
+</tr>
+<tr>
+<td><strong>Не будет поддерживаться</strong></td>
+<td>⚠️ — метод устарел и будет удалён в будущих версиях (помечен <code>[NotSupportedInWebApi]</code>)</td>
+</tr>
+<tr>
+<td><strong>Скрыт из COM</strong></td>
+<td>🔒 — метод не экспортируется в классический COM-интерфейс (помечен <code>[ComExportIgnore]</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>3 <strong>Нажмите на имя метода или свойства</strong> — откроется модальное окно, содержащее:</p>
+<ul>
+<li>Полную сигнатуру с подсветкой синтаксиса C#</li>
+<li>Описание метода или свойства из XML-документации</li>
+<li>Важные примечаниями (из тега <code>&lt;remarks&gt;</code>)</li>
+<li>Список параметров с типами и описаниями</li>
+<li>Описание возвращаемого значения (включая структуру <code>TableResult</code>)</li>
+</ul>
+<p>4 Нажмите кнопку <strong>«Копировать»</strong> — сигнатура будет скопирована в буфер обмена.</p>
+<h2 id="_4">Фильтрация и поиск</h2>
+<p>Для быстрого поиска нужных элементов используйте фильтры:</p>
+<table>
+<thead>
+<tr>
+<th>Фильтр</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Контракт</strong></td>
+<td>Показать методы только выбранного интерфейса</td>
+</tr>
+<tr>
+<td><strong>Имя элемента</strong></td>
+<td>Поиск по названию метода или свойства. Можно вводить несколько слов через пробел — будут найдены методы, содержащие <strong>все</strong> введённые слова. Поиск активируется при вводе хотя бы одного слова длиной ≥ 3 символов.</td>
+</tr>
+<tr>
+<td><strong>☑ Искать в описании</strong></td>
+<td>Переключает поиск с названия на содержимое описания (summary). Состояние чекбокса сохраняется между сессиями.</td>
+</tr>
+<tr>
+<td><strong>Web API</strong></td>
+<td><strong>✅ Поддерживаются</strong> — методы, доступные для использования (помечены <code>[InWebApi]</code>)<br><br><strong>❌ Не поддерживаются</strong> — методы, недоступные через Web API (нет <code>[InWebApi]</code>)<br><br><strong>⚠️ Не будут поддерживаться</strong> — устаревшие методы (помечены <code>[NotSupportedInWebApi]</code>)</td>
+</tr>
+<tr>
+<td><strong>COM-интерфейс</strong></td>
+<td><strong>✅ Поддерживаются</strong> — методы, доступные в COM API<br><br><strong>❌ Не поддерживаются</strong> — методы, скрытые из COM API (помечены <code>[ComExportIgnore]</code>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_5">Обозначения статусов</h2>
+<table>
+<thead>
+<tr>
+<th>Статус</th>
+<th>Значение</th>
+<th>Рекомендация</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅ В Web API</td>
+<td>Метод помечен <code>[InWebApi]</code></td>
+<td>Уже существует в классическом Web API ЛОЦМАН:PLM</td>
+</tr>
+<tr>
+<td>⚪ Не в Web API</td>
+<td>Метод не помечен <code>[InWebApi]</code></td>
+<td>Недоступен в классическом Web API ЛОЦМАН:PLM</td>
+</tr>
+<tr>
+<td>⚠️ Не будет поддерживаться</td>
+<td>Метод помечен <code>[NotSupportedInWebApi]</code></td>
+<td>Устарел, может быть удалён в будущих версиях</td>
+</tr>
+<tr>
+<td>🔒 Скрыт из COM</td>
+<td>Метод помечен <code>[ComExportIgnore]</code></td>
+<td>Недоступен в классическом COM API ЛОЦМАН:PLM</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>ВАЖНО</strong>!</p>
+<p>Используйте только методы со статусом <strong>«✅ В Web API»</strong> или <strong>«⚪ Не в Web API»</strong>.<br />
+Методы со статусом <strong>«⚠️ Не будет поддерживаться»</strong> или <strong>«🔒 Скрыт из COM»</strong> могут быть удалены в будущих версиях без предупреждения.</p>
+</blockquote>
+<h2 id="_6">Как использовать скопированную сигнатуру в плагине</h2>
+<p>Скопированная сигнатура показывает, как выглядит метод или свойство в интерфейсе контракта. Чтобы использовать его в своём плагине:</p>
+<ol>
+<li>
+<p><strong>Добавьте контракт в конструктор контроллера:</strong></p>
+<p><code>private readonly IConfMetaDataContract _metaData;  public MyPluginController(IConfMetaDataContract metaData) {     _metaData = metaData; }</code></p>
+</li>
+<li>
+<p><strong>Вызовите метод или обратитесь к свойству:</strong>
+```CSharp title=Метод
+var result = _metaData.GetLinks();
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>```csharp title=&quot;Свойство&quot;
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>// Сигнатура: int EventProcessingState { get; set; }
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>var state = _mainSystemConnection.EventProcessingState;  // чтение
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>_mainSystemConnection.EventProcessingState = 1;          // запись
+</span></code></pre></div></p>
+</li>
+</ol>
+<h2 id="_7">Еще примеры плагина</h2>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1"><strong>Метод</strong></label><label for="__tabbed_2_2"><strong>Свойство</strong></label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="language-CSharp highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">using</span><span class="w"> </span><span class="nn">Ascon.Plm.AppServer.Contracts.ConfigServer</span><span class="p">;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">Ascon.Plm.AppServer.WebApi.Controllers</span><span class="p">;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">Asp.Versioning</span><span class="p">;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">System.Collections.Generic</span><span class="p">;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">Ascon.Plm.AppServer.WebApi.Extensions</span><span class="p">;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">System.Linq</span><span class="p">;</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">Ascon.Plm.AppServer.WebApi.Enums</span><span class="p">;</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">Ascon.Plm.Common.Mapping</span><span class="p">;</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="na">[ApiController]</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="na">[Route(&quot;api/v{version:apiVersion}/links&quot;)]</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="na">[ApiVersion(&quot;4.0&quot;)]</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">LinksController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ApiController</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IConfMetaDataContract</span><span class="w"> </span><span class="n">_metaData</span><span class="p">;</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">LinksController</span><span class="p">(</span><span class="n">IConfMetaDataContract</span><span class="w"> </span><span class="n">metaData</span><span class="p">)</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">            </span><span class="n">_metaData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">metaData</span><span class="p">;</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">        </span><span class="na">[HttpGet]</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">ActionResult</span><span class="o">&lt;</span><span class="n">IEnumerable</span><span class="o">&lt;</span><span class="n">Plugin_GetLinksOutputDto</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">GetLinks</span><span class="p">()</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">dtos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_metaData</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">                </span><span class="p">.</span><span class="n">GetLinks</span><span class="p">()</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">                </span><span class="p">.</span><span class="n">ReadToEnumerable</span><span class="o">&lt;</span><span class="n">Plugin_GetLinksOutputDto</span><span class="o">&gt;</span><span class="p">()</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">                </span><span class="p">.</span><span class="n">ToList</span><span class="p">();</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nf">Ok</span><span class="p">(</span><span class="n">dtos</span><span class="p">);</span>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Plugin_GetLinksOutputDto</span>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">        </span><span class="na">[Column(&quot;_ID&quot;)]</span>
+</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Id</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>
+</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">        </span><span class="na">[Column(&quot;_NAME&quot;)]</span>
+</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>
+</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="w">        </span><span class="na">[Column(&quot;_TYPE&quot;)]</span>
+</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">LinkTypeKinds</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>
+</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="w">        </span><span class="na">[Column(&quot;_INVERSENAME&quot;)]</span>
+</span><span id="__span-4-47"><a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">InverseName</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-48"><a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>
+</span><span id="__span-4-49"><a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="w">        </span><span class="na">[Column(&quot;_ALIAS&quot;)]</span>
+</span><span id="__span-4-50"><a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Alias</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-51"><a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a>
+</span><span id="__span-4-52"><a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a><span class="w">        </span><span class="na">[Column(&quot;_DESCRIPTION&quot;)]</span>
+</span><span id="__span-4-53"><a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Description</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-54"><a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a>
+</span><span id="__span-4-55"><a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a><span class="w">        </span><span class="na">[Column(&quot;_ICON&quot;)]</span>
+</span><span id="__span-4-56"><a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">byte</span><span class="p">[]</span><span class="w"> </span><span class="n">Icon</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-57"><a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a>
+</span><span id="__span-4-58"><a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="w">        </span><span class="na">[Column(&quot;_ORDER&quot;)]</span>
+</span><span id="__span-4-59"><a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">Order</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-4-60"><a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a><span class="w">    </span><span class="p">}</span>
+</span></code></pre></div>
+</div>
+<div class="tabbed-block">
+<div class="language-CSharp highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">Ascon.Plm.AppServer.WebApi.Controllers</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">Asp.Versioning</span><span class="p">;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">Ascon.Plm.AppServer.Contracts</span><span class="p">;</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="na">[ApiController]</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="na">[Route(&quot;api/v{version:apiVersion}/main-system-connection&quot;)]</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="na">[ApiVersion(&quot;4.0&quot;)]</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">MainSystemConnectionController</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ApiController</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">IMainSystemConnectionContract</span><span class="w"> </span><span class="n">_mainSystemConnection</span><span class="p">;</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="nf">MainSystemConnectionController</span><span class="p">(</span><span class="n">IMainSystemConnectionContract</span><span class="w"> </span><span class="n">mainSystemConnection</span><span class="p">)</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">            </span><span class="n">_mainSystemConnection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mainSystemConnection</span><span class="p">;</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">        </span><span class="na">[HttpGet(&quot;event-state&quot;)]</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">ActionResult</span><span class="w"> </span><span class="nf">GetEventState</span><span class="p">()</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_mainSystemConnection</span><span class="p">.</span><span class="n">EventProcessingState</span><span class="p">;</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nf">Ok</span><span class="p">(</span><span class="n">state</span><span class="p">);</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">        </span><span class="na">[HttpPut(&quot;event-state&quot;)]</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="n">IActionResult</span><span class="w"> </span><span class="nf">SetEventState</span><span class="p">([</span><span class="n">FromBody</span><span class="p">]</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">state</span><span class="p">)</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">        </span><span class="p">{</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">            </span><span class="n">_mainSystemConnection</span><span class="p">.</span><span class="n">EventProcessingState</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">;</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nf">Ok</span><span class="p">();</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="w">    </span><span class="p">}</span>
+</span></code></pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<p><strong>Совет</strong>  </p>
+<p>Обратите внимание на типы параметров и возвращаемого значения. Типы, начинающиеся с <code>I</code> (например, <code>IDbSession</code>), являются интерфейсами и могут быть также получены через DI. Типы ЛОЦМАН (например, <code>TableResult</code>, <code>PolynomApi</code>) подсвечиваются бирюзовым цветом в модальном окне.</p>
+</blockquote>
+<h2 id="_8">Возможные проблемы</h2>
+<h3 id="_9">Страница загрузилась, но окно браузера пустое</h3>
+<p><strong>Причина:</strong> переменная окружения <code>LOODSMAN_SOURCE_CODE_ANALYZATORS</code> не установлена или установлена в <code>0</code>.</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Проверьте значение переменной:<ul>
+<li>Windows: <code>echo %LOODSMAN_SOURCE_CODE_ANALYZATORS%</code></li>
+<li>Linux: <code>echo $LOODSMAN_SOURCE_CODE_ANALYZATORS</code></li>
+</ul>
+</li>
+<li>Установите значение <code>1</code> и перезапустите службу.</li>
+</ol>
+<h3 id="404">Страница анализатора недоступна (404)</h3>
+<p><strong>Причина:</strong> неверная версия API в URL.</p>
+<p><strong>Решение:</strong> проверьте актуальную версию API в Swagger (<code>/swagger/index.html</code>) и используйте её в URL.</p>
+<h3 id="_10">Страница открывается, но список контрактов пуст</h3>
+<p><strong>Причина:</strong> сервер не смог найти сборки с контрактами.</p>
+<p><strong>Решение:</strong> обратитесь к администратору сервера для проверки целостности установки ЛОЦМАН:PLM.</p>
+<h3 id="_11">Модальное окно не открывается при клике на метод</h3>
+<p><strong>Причина:</strong> JavaScript-ошибка или не загрузились зависимости.</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Откройте консоль разработчика в браузере (F12) и проверьте наличие ошибок.</li>
+<li>Убедитесь, что файлы <code>ContractScripts.js</code> и <code>AnalyzatorsStyles.css</code> доступны.</li>
+<li>Очистите кэш браузера (Ctrl+F5).</li>
+</ol>
+<h3 id="_12">Отсутствует описание метода или параметров</h3>
+<p><strong>Причина:</strong> файл XML-документации не найден или метод не документирован.</p>
+<p><strong>Решение:</strong></p>
+<ol>
+<li>Убедитесь, что в папке с сервером приложений присутствует файл <code>Ascon.Plm.AppServer.WebApi.xml</code>.</li>
+<li>Если файл отсутствует, обратитесь к администратору для восстановления установки.</li>
+<li>Если файл есть, но описание отсутствует — метод не имеет XML-комментариев в исходном коде.</li>
+</ol>
+<h3 id="_13">Поиск не находит ожидаемые методы</h3>
+<p><strong>Причина 1:</strong> введено менее 3 символов в каждом слове.</p>
+<p><strong>Решение:</strong> поиск активируется только когда хотя бы одно слово имеет длину ≥ 3 символов. Введите более длинное слово.</p>
+<p><strong>Причина 2:</strong> поиск ищет точное вхождение подстроки, а не словоформы.</p>
+<p><strong>Решение:</strong> используйте корень слова (например, «удал» найдёт «удалить», «удаляет», «удаление»).</p>
+<p><strong>Причина 3:</strong> не включен чекбокс ☑ Искать в описании» при поиске по описанию.</p>
+<p><strong>Решение:</strong> отметьте чекбокс, если хотите искать в тексте описания.</p>
+<blockquote>
+<p><strong>Cовет</strong>  </p>
+<p>Добавьте страницу анализатора в закладки браузера для быстрого доступа при разработке плагинов. Используйте поиск по нескольким словам (например, «удал атрибут связи») чтобы быстро находить нужные методы по их назначению, даже если не помните точное название. Чекбокс «Искать в описании» сохраняет своё состояние между сессиями браузера.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["toc.integrate", "search.suggest", "content.code.copy"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
