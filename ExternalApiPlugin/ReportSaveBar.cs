@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -22,8 +23,18 @@ namespace ExternalApiPlugin
         private readonly Button _saveButton;
         private readonly DispatcherTimer _timer;
 
+        private readonly Button _cancelButton;
+
         private INetPluginCall _call;
+        private IntPtr _clientHwnd;
         private long _lastKey = -1;
+        private bool _saved;
+        private bool _closed;
+
+        [DllImport("user32.dll")] private static extern bool IsIconic(IntPtr hWnd);
+        [DllImport("user32.dll")] private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        [DllImport("user32.dll")] private static extern bool SetForegroundWindow(IntPtr hWnd);
+        private const int SW_RESTORE = 9;
 
         public static void ShowFor(INetPluginCall call)
         {
@@ -76,18 +87,18 @@ namespace ExternalApiPlugin
 
             _saveButton = new Button { Content = "Сохранить", Padding = new Thickness(16, 5, 16, 5), Margin = new Thickness(0, 0, 8, 0), IsEnabled = false };
             _saveButton.Click += SaveButton_Click;
-            var cancelButton = new Button { Content = "Отмена", Padding = new Thickness(16, 5, 16, 5) };
-            cancelButton.Click += (s, e) => { PendingReport.Clear(); Close(); };
+            _cancelButton = new Button { Content = "Отмена", Padding = new Thickness(16, 5, 16, 5) };
+            _cancelButton.Click += (s, e) => { PendingReport.Clear(); CloseKeepingClient(); };
 
             var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
             buttons.Children.Add(_saveButton);
-            buttons.Children.Add(cancelButton);
+            buttons.Children.Add(_cancelButton);
             panel.Children.Add(buttons);
             Content = panel;
 
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(800) };
             _timer.Tick += (s, e) => Refresh(_call, "таймер");
-            Closed += (s, e) => _timer.Stop();
+            Closed += (s, e) => { _closed = true; _timer.Stop(); };
             _timer.Start();
         }
 
@@ -100,6 +111,7 @@ namespace ExternalApiPlugin
                 var hwnd = handle is IntPtr ptr ? ptr : new IntPtr(Convert.ToInt64(handle));
                 if (hwnd != IntPtr.Zero)
                 {
+                    _clientHwnd = hwnd;
                     new WindowInteropHelper(this).Owner = hwnd;
                 }
             }
@@ -150,6 +162,47 @@ namespace ExternalApiPlugin
             }
         }
 
+        // Закрытие owned-окна может оставить клиента без активации (он сворачивается): перед закрытием
+        // явно отдаём активацию главному окну, а если оно всё же свёрнуто — восстанавливаем.
+        private void CloseKeepingClient()
+        {
+            var hwnd = _clientHwnd;
+            if (hwnd != IntPtr.Zero)
+            {
+                try
+                {
+                    if (IsIconic(hwnd))
+                    {
+                        ShowWindow(hwnd, SW_RESTORE);
+                    }
+                    SetForegroundWindow(hwnd);
+                }
+                catch (Exception)
+                {
+                    // Только косметика: не мешаем закрытию.
+                }
+            }
+
+            if (!_closed)
+            {
+                Close();
+            }
+
+            if (hwnd != IntPtr.Zero)
+            {
+                try
+                {
+                    if (IsIconic(hwnd))
+                    {
+                        ShowWindow(hwnd, SW_RESTORE);
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
         private void SetState(string text, bool canSave)
         {
             _statusText.Text = text;
@@ -169,8 +222,22 @@ namespace ExternalApiPlugin
                 var id = _call.PluginCall.IdVersion;
                 LoodsmanFileUploader.UpFileById(_call, id, report.FileName, string.Empty, report.Data);
                 PendingReport.Clear();
-                MessageBox.Show(this, $"Файл «{report.FileName}» добавлен (id объекта {id}).\nИзменения станут видны после сохранения рабочего проекта.", "Сохранение отчёта");
-                Close();
+                _saved = true;
+
+                // Без MessageBox: диалог с владельцем-панелью, которая тут же закрывается, сворачивал клиент.
+                _timer.Stop();
+                SetState($"✓ Файл «{report.FileName}» добавлен (id объекта {id}). Изменения станут видны после сохранения рабочего проекта.", false);
+                _cancelButton.Content = "Закрыть";
+                var closeTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2.5) };
+                closeTimer.Tick += (s2, e2) =>
+                {
+                    closeTimer.Stop();
+                    if (_saved && !_closed)
+                    {
+                        CloseKeepingClient();
+                    }
+                };
+                closeTimer.Start();
             }
             catch (Exception ex)
             {
