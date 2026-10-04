@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
+using Microsoft.Win32;
 using System.Windows.Threading;
 using Ascon.Plm.Loodsman.PluginSDK;
 
@@ -65,7 +67,7 @@ namespace ExternalApiPlugin
         private ReportSaveBar()
         {
             Title = "Сохранение отчёта";
-            Width = 420;
+            Width = 560;
             SizeToContent = SizeToContent.Height;
             ResizeMode = ResizeMode.NoResize;
             ShowInTaskbar = false;
@@ -89,11 +91,14 @@ namespace ExternalApiPlugin
 
             _saveButton = new Button { Content = "Сохранить", Padding = new Thickness(16, 5, 16, 5), Margin = new Thickness(0, 0, 8, 0), IsEnabled = false };
             _saveButton.Click += SaveButton_Click;
+            var diskButton = new Button { Content = "На диск…", Padding = new Thickness(16, 5, 16, 5), Margin = new Thickness(0, 0, 8, 0) };
+            diskButton.Click += DiskButton_Click;
             _cancelButton = new Button { Content = "Отмена", Padding = new Thickness(16, 5, 16, 5) };
             _cancelButton.Click += (s, e) => { PendingReport.Clear(); CloseKeepingClient(); };
 
             var buttons = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
             buttons.Children.Add(_saveButton);
+            buttons.Children.Add(diskButton);
             buttons.Children.Add(_cancelButton);
             panel.Children.Add(buttons);
             Content = panel;
@@ -154,8 +159,9 @@ namespace ExternalApiPlugin
                 _target = LoodsmanFileUploader.GetTargetInfo(call, id);
                 _assessment = _target?.Assess(checkOut) ?? SaveAssessment.Direct;
                 var title = _target?.Title ?? "id " + id;
+                var lockOwner = _assessment.LockedByOther ? LoodsmanFileUploader.GetLockOwnerText(call, id) : null;
                 SetState(
-                    !_assessment.CanSave ? $"Нельзя сохранить: {_assessment.Reason}."
+                    !_assessment.CanSave ? $"Нельзя сохранить: {_assessment.Reason}." + (lockOwner != null ? $"\nЗаблокировал: {lockOwner}." : string.Empty)
                         : _assessment.Mode == SaveMode.AutoCheckOut ? $"Можно сохранить в: {title}.\nДокумент не в работе: будет взят в работу и сразу сохранён в базу (check-in)."
                         : $"Можно сохранить в: {title}",
                     _assessment.CanSave);
@@ -213,6 +219,38 @@ namespace ExternalApiPlugin
         {
             _statusText.Text = text;
             _saveButton.IsEnabled = canSave;
+        }
+
+        // Запасной путь, когда в документ сохранить нельзя (например, заблокирован другим пользователем).
+        // Отчёт остаётся в памяти плагина: после сохранения на диск можно всё равно выбрать документ.
+        private void DiskButton_Click(object sender, RoutedEventArgs e)
+        {
+            var report = PendingReport.Current;
+            if (report == null)
+            {
+                return;
+            }
+
+            var dialog = new SaveFileDialog
+            {
+                FileName = report.FileName,
+                Filter = "PDF (*.pdf)|*.pdf|Все файлы (*.*)|*.*",
+                DefaultExt = ".pdf"
+            };
+            if (dialog.ShowDialog(this) != true)
+            {
+                return;
+            }
+
+            try
+            {
+                File.WriteAllBytes(dialog.FileName, report.Data);
+                _sourceText.Text = $"сохранено на диск: {dialog.FileName}";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message, "Сохранение на диск: ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)

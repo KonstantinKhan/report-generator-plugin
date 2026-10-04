@@ -112,6 +112,49 @@ namespace ExternalApiPlugin
         }
 
         /// <summary>
+        /// GetInfoAboutVersion (режим 12): пользователь, в рабочем проекте которого заблокирован объект.
+        /// Возвращает null, если данных нет или получить не удалось.
+        /// </summary>
+        public static string GetLockOwnerText(INetPluginCall call, long idVersion)
+        {
+            try
+            {
+                var table = call.GetDataTable("GetInfoAboutVersion", string.Empty, string.Empty, string.Empty, (int)idVersion, 12);
+                if (table == null || table.Rows.Count == 0)
+                {
+                    return null;
+                }
+
+                var row = table.Rows[0];
+                var who = Text(row, "_FULLNAME");
+                var login = Text(row, "_NAME");
+                var name = string.IsNullOrWhiteSpace(who) ? login : (string.IsNullOrWhiteSpace(login) ? who : $"{who} ({login})");
+                if (string.IsNullOrWhiteSpace(name))
+                {
+                    return null;
+                }
+
+                var text = name;
+                if (table.Columns.Contains("_DATE") && row["_DATE"] != DBNull.Value)
+                {
+                    text += $", с {Convert.ToDateTime(row["_DATE"]):dd.MM.yyyy HH:mm}";
+                }
+
+                var comment = Text(row, "_COMMENTS");
+                if (!string.IsNullOrWhiteSpace(comment))
+                {
+                    text += $", комментарий: «{comment.Trim()}»";
+                }
+
+                return text;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// GetInfoAboutVersion (режим 15): тип/ключ/версия, является ли объект документом, уровень доступа и блокировка.
         /// Возвращает null, если данные получить не удалось (тогда вызывающий решает, что делать).
         /// </summary>
@@ -207,13 +250,15 @@ namespace ExternalApiPlugin
 
             if (checkOutId != 0)
             {
-                return Locked == 0 || Locked == 2
-                    ? SaveAssessment.Refuse("объект не заблокирован в текущем рабочем проекте (не взят в работу или заблокирован в другом проекте)")
+                if (Locked == 2)
+                    return SaveAssessment.RefuseLockedByOther("объект заблокирован в другом рабочем проекте");
+                return Locked == 0
+                    ? SaveAssessment.Refuse("объект не заблокирован в текущем рабочем проекте (не взят в работу)")
                     : SaveAssessment.Direct;
             }
 
             if (Locked == 2)
-                return SaveAssessment.Refuse("объект заблокирован другим пользователем");
+                return SaveAssessment.RefuseLockedByOther("объект заблокирован другим пользователем");
             if (Locked == 1)
                 return SaveAssessment.Refuse("объект уже взят вами в работу в другом рабочем проекте: откройте его и сохраните оттуда");
             return SaveAssessment.AutoCheckOut;
@@ -234,9 +279,13 @@ namespace ExternalApiPlugin
         public SaveMode Mode { get; private set; }
         public string Reason { get; private set; }
         public bool CanSave => Mode != SaveMode.Refused;
+        /// <summary>Отказ из-за блокировки другим пользователем/проектом: можно показать, кто держит объект.</summary>
+        public bool LockedByOther { get; private set; }
 
         public static readonly SaveAssessment Direct = new SaveAssessment { Mode = SaveMode.Direct };
         public static readonly SaveAssessment AutoCheckOut = new SaveAssessment { Mode = SaveMode.AutoCheckOut };
+        public static SaveAssessment RefuseLockedByOther(string reason) =>
+            new SaveAssessment { Mode = SaveMode.Refused, Reason = reason, LockedByOther = true };
         public static SaveAssessment Refuse(string reason) => new SaveAssessment { Mode = SaveMode.Refused, Reason = reason };
     }
 }
