@@ -142,6 +142,39 @@ namespace ExternalApiPlugin
             return text.Length > 0 ? $"Выбран объект {text}" : "Выбран объект";
         }
 
+        /// <summary>
+        /// GetInfoAboutFile: к какой версии объекта привязан файл с таким именем (путь пустой, как при сохранении).
+        /// Возвращает null, если файла в базе нет или проверить не удалось.
+        /// </summary>
+        public static FileOwner FindFileOwner(INetPluginCall call, string fileName)
+        {
+            try
+            {
+                var table = call.GetDataTable("GetInfoAboutFile", fileName, string.Empty);
+                if (table == null || table.Rows.Count == 0)
+                {
+                    return null;
+                }
+
+                var row = table.Rows[0];
+                var id = Number(row, "_ID_VERSION");
+                if (id == null)
+                {
+                    return null;
+                }
+
+                return new FileOwner
+                {
+                    IdVersion = id.Value,
+                    Title = $"{Text(row, "_TYPE")} {Text(row, "_PRODUCT")} v{Text(row, "_VERSION")}"
+                };
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         /// <summary>GetInfoAboutVersion (режим 7): файлы версии, нужны чтобы подсмотреть допустимый путь файла.</summary>
         public static string GetFilesInfo(INetPluginCall call, long idVersion)
         {
@@ -261,6 +294,12 @@ namespace ExternalApiPlugin
 
             return $"результат: {value.GetType().FullName} = {value}";
         }
+    }
+
+    internal sealed class FileOwner
+    {
+        public long IdVersion { get; set; }
+        public string Title { get; set; }
     }
 
     internal sealed class TargetInfo

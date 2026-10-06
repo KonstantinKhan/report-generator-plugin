@@ -10,7 +10,7 @@ namespace ExternalApiPlugin
     {
         public static PendingReport Current { get; private set; }
 
-        public string FileName { get; }
+        public string FileName { get; private set; }
         public byte[] Data { get; }
         public long SourceObjectId { get; }
         public DateTime CreatedAt { get; }
@@ -26,6 +26,15 @@ namespace ExternalApiPlugin
         public static void Set(string fileName, byte[] data, long sourceObjectId)
         {
             Current = new PendingReport(fileName, data, sourceObjectId);
+        }
+
+        /// <summary>Пользователь поправил имя файла: сохраняться будет под ним.</summary>
+        public static void Rename(string fileName)
+        {
+            if (Current != null && !string.IsNullOrWhiteSpace(fileName))
+            {
+                Current.FileName = fileName.Trim();
+            }
         }
 
         public static void Clear()

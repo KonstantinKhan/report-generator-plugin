@@ -25,6 +25,10 @@ namespace ExternalApiPlugin
         private readonly DispatcherTimer _timer;
 
         private readonly Button _cancelButton;
+        private readonly TextBox _nameBox;
+        private readonly CheckBox _overwriteBox;
+        private bool _stateCanSave;
+        private bool _needsOverwrite;
 
         private INetPluginCall _call;
         private IntPtr _clientHwnd;
@@ -83,6 +87,18 @@ namespace ExternalApiPlugin
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(0, 0, 0, 8)
             });
+            panel.Children.Add(new TextBlock { Text = "Имя файла:" });
+            _nameBox = new TextBox { Text = report.FileName, Padding = new Thickness(4), Margin = new Thickness(0, 0, 0, 6) };
+            _nameBox.TextChanged += NameBox_TextChanged;
+            panel.Children.Add(_nameBox);
+            _overwriteBox = new CheckBox
+            {
+                Content = "Перезаписать существующий файл",
+                Visibility = Visibility.Collapsed,
+                Margin = new Thickness(0, 0, 0, 6)
+            };
+            _overwriteBox.Click += (s, e) => UpdateSaveButton();
+            panel.Children.Add(_overwriteBox);
             _statusText = new TextBlock { TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 4) };
             panel.Children.Add(_statusText);
 
@@ -155,11 +171,36 @@ namespace ExternalApiPlugin
                 _assessment = _target?.Assess(checkOut) ?? SaveAssessment.Direct;
                 var title = _target?.Title ?? "id " + id;
                 var lockOwner = _assessment.LockedByOther ? LoodsmanFileUploader.GetLockOwnerText(call, id) : null;
-                SetState(
+                var text =
                     !_assessment.CanSave ? $"Нельзя сохранить: {_assessment.Reason}." + (lockOwner != null ? $"\nЗаблокировал: {lockOwner}." : string.Empty)
                         : _assessment.Mode == SaveMode.AutoCheckOut ? $"Можно сохранить в: {title}.\nДокумент не в работе: будет взят в работу и сразу сохранён в базу."
-                        : $"Можно сохранить в: {title}",
-                    _assessment.CanSave);
+                        : $"Можно сохранить в: {title}";
+
+                // Файл с таким именем уже есть в базе: в тот же документ его можно перезаписать, в чужой — нет.
+                var fileName = PendingReport.Current?.FileName;
+                var owner = string.IsNullOrEmpty(fileName) ? null : LoodsmanFileUploader.FindFileOwner(call, fileName);
+                var canSave = _assessment.CanSave;
+                _needsOverwrite = false;
+                if (owner != null)
+                {
+                    if (owner.IdVersion == id)
+                    {
+                        _needsOverwrite = true;
+                        text += $"\nФайл «{fileName}» уже есть в этом документе. Отметьте «Перезаписать» или измените имя.";
+                    }
+                    else
+                    {
+                        canSave = false;
+                        text += $"\nФайл «{fileName}» уже привязан к объекту {owner.Title}. Измените имя файла.";
+                    }
+                }
+
+                _overwriteBox.Visibility = _needsOverwrite ? Visibility.Visible : Visibility.Collapsed;
+                if (!_needsOverwrite)
+                {
+                    _overwriteBox.IsChecked = false;
+                }
+                SetState(text, canSave);
                 _saveButton.Content = _assessment.Mode == SaveMode.AutoCheckOut ? "Взять в работу и сохранить" : "Сохранить";
             }
             catch (Exception ex)
@@ -213,7 +254,20 @@ namespace ExternalApiPlugin
         private void SetState(string text, bool canSave)
         {
             _statusText.Text = text;
-            _saveButton.IsEnabled = canSave;
+            _stateCanSave = canSave;
+            UpdateSaveButton();
+        }
+
+        private void UpdateSaveButton()
+        {
+            _saveButton.IsEnabled = _stateCanSave && (!_needsOverwrite || _overwriteBox.IsChecked == true);
+        }
+
+        private void NameBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            PendingReport.Rename(_nameBox.Text);
+            _lastKey = -1;
+            Refresh(_call, "имя файла");
         }
 
         // Запасной путь, когда в документ сохранить нельзя (например, заблокирован другим пользователем).

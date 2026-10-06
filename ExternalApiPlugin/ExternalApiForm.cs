@@ -61,6 +61,7 @@ namespace ExternalApiPlugin
             Grid.SetRow(_requestButton, 1);
 
             _fileNameBox = new TextBox { Padding = new Thickness(4), Margin = new Thickness(0, 0, 0, 6) };
+            _fileNameBox.TextChanged += (s, e) => PendingReport.Rename(_fileNameBox.Text);
 
             var saveButton = new Button { Content = "Сохранить на диск…", Padding = new Thickness(12, 6, 12, 6), Margin = new Thickness(0, 0, 8, 0) };
             saveButton.Click += SaveButton_Click;
