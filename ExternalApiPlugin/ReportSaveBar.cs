@@ -21,7 +21,6 @@ namespace ExternalApiPlugin
         private static ReportSaveBar _current;
 
         private readonly TextBlock _statusText;
-        private readonly TextBlock _sourceText;
         private readonly Button _saveButton;
         private readonly DispatcherTimer _timer;
 
@@ -80,14 +79,12 @@ namespace ExternalApiPlugin
             var panel = new StackPanel { Margin = new Thickness(12) };
             panel.Children.Add(new TextBlock
             {
-                Text = $"Отчёт «{report.FileName}», {report.Data.Length} байт.\nВыберите в клиенте документ в рабочем проекте.",
+                Text = $"Отчёт «{report.FileName}».\nВыберите в клиенте документ в рабочем проекте.",
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(0, 0, 0, 8)
             });
             _statusText = new TextBlock { TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 4) };
-            _sourceText = new TextBlock { FontSize = 10, Foreground = System.Windows.Media.Brushes.Gray, Margin = new Thickness(0, 0, 0, 8) };
             panel.Children.Add(_statusText);
-            panel.Children.Add(_sourceText);
 
             _saveButton = new Button { Content = "Сохранить", Padding = new Thickness(16, 5, 16, 5), Margin = new Thickness(0, 0, 8, 0), IsEnabled = false };
             _saveButton.Click += SaveButton_Click;
@@ -148,8 +145,6 @@ namespace ExternalApiPlugin
                 }
                 _lastKey = key;
 
-                _sourceText.Text = $"выделение обновлено: {source}, {DateTime.Now:HH:mm:ss}; id={id}, CheckOut={checkOut}";
-
                 if (id <= 0)
                 {
                     SetState("Ничего не выделено.", false);
@@ -162,7 +157,7 @@ namespace ExternalApiPlugin
                 var lockOwner = _assessment.LockedByOther ? LoodsmanFileUploader.GetLockOwnerText(call, id) : null;
                 SetState(
                     !_assessment.CanSave ? $"Нельзя сохранить: {_assessment.Reason}." + (lockOwner != null ? $"\nЗаблокировал: {lockOwner}." : string.Empty)
-                        : _assessment.Mode == SaveMode.AutoCheckOut ? $"Можно сохранить в: {title}.\nДокумент не в работе: будет взят в работу и сразу сохранён в базу (check-in)."
+                        : _assessment.Mode == SaveMode.AutoCheckOut ? $"Можно сохранить в: {title}.\nДокумент не в работе: будет взят в работу и сразу сохранён в базу."
                         : $"Можно сохранить в: {title}",
                     _assessment.CanSave);
                 _saveButton.Content = _assessment.Mode == SaveMode.AutoCheckOut ? "Взять в работу и сохранить" : "Сохранить";
@@ -245,7 +240,7 @@ namespace ExternalApiPlugin
             try
             {
                 File.WriteAllBytes(dialog.FileName, report.Data);
-                _sourceText.Text = $"сохранено на диск: {dialog.FileName}";
+                _statusText.Text = $"Сохранено на диск: {dialog.FileName}";
             }
             catch (Exception ex)
             {

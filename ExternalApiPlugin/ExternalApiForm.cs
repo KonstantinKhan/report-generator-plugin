@@ -20,11 +20,9 @@ namespace ExternalApiPlugin
         private readonly INetPluginCall _call;
         private readonly StackPanel _actionsPanel;
         private readonly TextBox _fileNameBox;
-        private readonly TextBox _filePathBox;
 
         public bool SaveRequested { get; private set; }
 
-        private string _reportId;
         private byte[] _reportPdf;
 
         public ExternalApiForm(long objectId, ReportType reportType, INetPluginCall call)
@@ -48,14 +46,14 @@ namespace ExternalApiPlugin
 
             var idLabel = new TextBlock
             {
-                Text = $"Id выделенного объекта: {objectId}",
+                Text = LoodsmanFileUploader.GetObjectCaption(call, objectId),
                 Margin = new Thickness(0, 0, 0, 12)
             };
             Grid.SetRow(idLabel, 0);
 
             _requestButton = new Button
             {
-                Content = "Отправить на сервер",
+                Content = "Сформировать отчёт",
                 Padding = new Thickness(12, 6, 12, 6),
                 HorizontalAlignment = HorizontalAlignment.Left
             };
@@ -63,21 +61,17 @@ namespace ExternalApiPlugin
             Grid.SetRow(_requestButton, 1);
 
             _fileNameBox = new TextBox { Padding = new Thickness(4), Margin = new Thickness(0, 0, 0, 6) };
-            _filePathBox = new TextBox { Padding = new Thickness(4), Margin = new Thickness(0, 0, 0, 6) };
 
             var saveButton = new Button { Content = "Сохранить на диск…", Padding = new Thickness(12, 6, 12, 6), Margin = new Thickness(0, 0, 8, 0) };
             saveButton.Click += SaveButton_Click;
             var chooseButton = new Button { Content = "Сохранить в документ…", Padding = new Thickness(12, 6, 12, 6), Margin = new Thickness(0, 0, 8, 0) };
             chooseButton.Click += (s, e) => { SaveRequested = true; Close(); };
-            var attachButton = new Button { Content = "Прикрепить к этому объекту", Padding = new Thickness(12, 6, 12, 6), Margin = new Thickness(0, 0, 8, 0) };
-            attachButton.Click += AttachButton_Click;
             var filesButton = new Button { Content = "Файлы объекта", Padding = new Thickness(12, 6, 12, 6) };
             filesButton.Click += FilesButton_Click;
 
             var buttonsRow = new StackPanel { Orientation = Orientation.Horizontal };
             buttonsRow.Children.Add(chooseButton);
             buttonsRow.Children.Add(saveButton);
-            buttonsRow.Children.Add(attachButton);
             buttonsRow.Children.Add(filesButton);
 
             _actionsPanel = new StackPanel { Margin = new Thickness(0, 12, 0, 0), Visibility = Visibility.Collapsed };
@@ -87,10 +81,8 @@ namespace ExternalApiPlugin
                 TextWrapping = TextWrapping.Wrap,
                 Margin = new Thickness(0, 0, 0, 8)
             });
-            _actionsPanel.Children.Add(new TextBlock { Text = "Имя файла в ЛОЦМАН (для кнопки ниже):" });
+            _actionsPanel.Children.Add(new TextBlock { Text = "Имя файла:" });
             _actionsPanel.Children.Add(_fileNameBox);
-            _actionsPanel.Children.Add(new TextBlock { Text = "Путь файла (относительно рабочего диска, можно пусто):" });
-            _actionsPanel.Children.Add(_filePathBox);
             _actionsPanel.Children.Add(buttonsRow);
             Grid.SetRow(_actionsPanel, 2);
 
@@ -116,7 +108,7 @@ namespace ExternalApiPlugin
         private async void RequestButton_Click(object sender, RoutedEventArgs e)
         {
             _requestButton.IsEnabled = false;
-            _resultBox.Text = "Запрос...";
+            _resultBox.Text = "Формирование отчёта...";
             try
             {
                 if (_reportType != ReportType.SpecificationWithPZ && _reportType != ReportType.SpecificationWithoutPZ)
@@ -134,19 +126,22 @@ namespace ExternalApiPlugin
                 using (var response = await client.PostAsync(url, null))
                 {
                     var body = await response.Content.ReadAsStringAsync();
-                    _resultBox.Text = FormatResult(response.StatusCode, response.ReasonPhrase, body);
-
-                    if (response.IsSuccessStatusCode && TryGetReportId(body, out var reportId))
+                    if (!response.IsSuccessStatusCode)
                     {
-                        _resultBox.Text += "\r\n\r\nСкачиваю отчёт...";
-                        var pdfUrl = config.BuildReportDownloadUrl(reportId);
-                        _reportPdf = await client.GetByteArrayAsync(pdfUrl);
-                        _reportId = reportId;
-                        PendingReport.Set($"report-{_objectId}.pdf", _reportPdf, _objectId);
-                        _fileNameBox.Text = $"report-{_objectId}.pdf";
-                        _actionsPanel.Visibility = Visibility.Visible;
-                        _resultBox.Text += $"\r\nОтчёт скачан: {_reportPdf.Length} байт.";
+                        throw new HttpRequestException($"HTTP {(int)response.StatusCode} {response.ReasonPhrase}\r\n{body}");
                     }
+
+                    if (!TryGetReportId(body, out var reportId))
+                    {
+                        throw new InvalidOperationException($"В ответе сервера нет id отчёта:\r\n{body}");
+                    }
+
+                    _resultBox.Text = "Сохранение отчёта...";
+                    _reportPdf = await client.GetByteArrayAsync(config.BuildReportDownloadUrl(reportId));
+                    PendingReport.Set($"report-{_objectId}.pdf", _reportPdf, _objectId);
+                    _fileNameBox.Text = $"report-{_objectId}.pdf";
+                    _actionsPanel.Visibility = Visibility.Visible;
+                    _resultBox.Text = "Отчёт сохранён";
                 }
             }
             catch (Exception ex)
@@ -204,27 +199,6 @@ namespace ExternalApiPlugin
             }
         }
 
-        private void AttachButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (_reportPdf == null) return;
-
-            try
-            {
-                // 0 — клиент вызвал плагин вне рабочего проекта (просмотр базы), UpFileById там не работает.
-                var checkOutId = _call.PluginCall.CheckOut;
-                Log($"PluginCall.CheckOut = {checkOutId}" + (checkOutId == 0
-                    ? " (объект не в рабочем проекте: возьмите его в работу и запустите плагин из окна рабочего проекта)"
-                    : string.Empty));
-
-                var result = LoodsmanFileUploader.UpFileById(_call, _objectId, _fileNameBox.Text, _filePathBox.Text, _reportPdf);
-                Log($"UpFileById(id={_objectId}, имя='{_fileNameBox.Text}', путь='{_filePathBox.Text}') выполнен.\r\n{result}");
-            }
-            catch (Exception ex)
-            {
-                Log($"UpFileById: исключение\r\n{ex}");
-            }
-        }
-
         private void FilesButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -235,30 +209,6 @@ namespace ExternalApiPlugin
             {
                 Log($"GetInfoAboutVersion: исключение\r\n{ex}");
             }
-        }
-
-        private static string FormatResult(HttpStatusCode statusCode, string reasonPhrase, string body)
-        {
-            var header = $"HTTP {(int)statusCode} {reasonPhrase}";
-
-            try
-            {
-                using (var doc = JsonDocument.Parse(body))
-                {
-                    var root = doc.RootElement;
-                    if (root.TryGetProperty("path", out var pathProp) && pathProp.ValueKind == JsonValueKind.String)
-                    {
-                        var path = pathProp.GetString();
-                        var idText = root.TryGetProperty("id", out var idProp) ? idProp.ToString() : "?";
-                        return $"{header}\r\n\r\nId отчёта: {idText}\r\nПолный путь до отчёта: {path}";
-                    }
-                }
-            }
-            catch (JsonException)
-            {
-            }
-
-            return $"{header}\r\n\r\nОтвет сервера:\r\n{body}";
         }
     }
 }

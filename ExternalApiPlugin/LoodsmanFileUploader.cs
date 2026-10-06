@@ -104,6 +104,44 @@ namespace ExternalApiPlugin
             return value == null ? null : Convert.ToString(value);
         }
 
+        /// <summary>
+        /// Подпись выбранного объекта: «Выбран объект &lt;обозначение&gt; &lt;наименование&gt;». Обозначение — ключевой атрибут
+        /// (PluginCall.stProduct), наименование — атрибут «Наименование» (GetInfoAboutVersion, режим 1). Если данных нет — только то, что удалось получить.
+        /// </summary>
+        public static string GetObjectCaption(INetPluginCall call, long idVersion)
+        {
+            string designation = null;
+            string name = null;
+            try
+            {
+                designation = call.PluginCall.stProduct;
+            }
+            catch (Exception)
+            {
+            }
+
+            try
+            {
+                var table = call.GetDataTable("GetInfoAboutVersion", string.Empty, string.Empty, string.Empty, (int)idVersion, 1);
+                if (table != null)
+                {
+                    foreach (DataRow row in table.Rows)
+                    {
+                        var key = Text(row, "_ATTRIBUTE") ?? Text(row, "_NAME");
+                        var value = Text(row, "_VALUE");
+                        if (string.Equals(key, "Наименование", StringComparison.OrdinalIgnoreCase)) name = value;
+                        else if (string.IsNullOrWhiteSpace(designation) && string.Equals(key, "Обозначение", StringComparison.OrdinalIgnoreCase)) designation = value;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            var text = $"{designation} {name}".Trim();
+            return text.Length > 0 ? $"Выбран объект {text}" : "Выбран объект";
+        }
+
         /// <summary>GetInfoAboutVersion (режим 7): файлы версии, нужны чтобы подсмотреть допустимый путь файла.</summary>
         public static string GetFilesInfo(INetPluginCall call, long idVersion)
         {

@@ -18,7 +18,7 @@ namespace ExternalApiPlugin
             _objectId = objectId;
             _call = call;
 
-            Title = "Выбрать отчёт";
+            Title = "Сформировать отчёт";
             Width = 560;
             Height = 500;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
