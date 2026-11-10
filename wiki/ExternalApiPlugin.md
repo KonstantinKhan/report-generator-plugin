@@ -78,7 +78,7 @@ private async void RequestButton_Click(object sender, RoutedEventArgs e)
     _resultBox.Text = "Запрос...";
     try
     {
-        if (_reportType != ReportType.SpecificationWithoutPZ)
+        if (!IsSupportedReport(_reportType)) // 4 спецификационных типа; ведомости — заглушка
         {
             _resultBox.Text = $"{ReportTypeNames.GetName(_reportType)}\r\n\r\nЭтот отчёт находится в процессе разработки.";
             return;
@@ -87,7 +87,7 @@ private async void RequestButton_Click(object sender, RoutedEventArgs e)
         ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
         var config = ServerConfig.Load();
-        var url = config.BuildSpecificationUrl(_objectId);
+        var url = config.BuildReportUrl(_objectId, _reportType);
 
         using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds) })
         using (var response = await client.PostAsync(url, null))
@@ -110,7 +110,7 @@ private async void RequestButton_Click(object sender, RoutedEventArgs e)
 Важные детали реализации:
 
 - **WPF вместо WinForms.** Окно наследует `Window` из `System.Windows`, layout собран через `Grid` с `RowDefinitions`. UI современнее, лучше масштабируется, проще интегрировать визуальные эффекты.
-- **Поддержка типов отчётов.** Конструктор принимает `ReportType`, заголовок окна показывает название отчёта. Для всех типов кроме `SpecificationWithoutPZ` показывается заглушка "в разработке" — это позволит добавлять поддержку новых типов на сервере без изменений клиента.
+- **Поддержка типов отчётов.** Конструктор принимает `ReportType`, заголовок окна показывает название отчёта. Для типов, не входящих в 4 спецификационных (ведомости), показывается заглушка "в разработке".
 - **Асинхронность.** Обработчик клика — `async void`, запрос идёт через `await client.PostAsync(...)`, а не через блокирующий `.Result`. Это не блокирует UI-поток клиента на время запроса.
 - **`ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12`.** Явно выставляется перед каждым запросом. На .NET Framework в хостовом процессе стороннего приложения нет гарантии, что TLS 1.2 включён по умолчанию.
 - **Форматирование результата.** Метод `FormatResult()` парсит JSON ответ и вытягивает поля `id` и `path` для показа пользователю; если ответ не JSON — показывает как есть.
@@ -120,6 +120,7 @@ private async void RequestButton_Click(object sender, RoutedEventArgs e)
   {
     "baseUrl": "http://127.0.0.1:8080/",
     "specificationEndpoint": "specifications/{versionId}",
+    "groupSpecificationEndpoint": "group-specifications/{versionId}",
     "healthEndpoint": "health",
     "timeoutSeconds": 30
   }

@@ -47,12 +47,13 @@ python tools\test_server.py
 {
   "baseUrl": "http://127.0.0.1:8080/",
   "specificationEndpoint": "specifications/{versionId}",
+  "groupSpecificationEndpoint": "group-specifications/{versionId}",
   "healthEndpoint": "health",
   "timeoutSeconds": 30
 }
 ```
 
-⚠️ **Рассинхронизация с `tools/test_server.py`.** Плагин шлёт `POST /specifications/{versionId}` (id объекта — в пути), а `test_server.py` реализует только `do_GET` с `objectId` в query — не подходит. Для локальной проверки нужно либо поднять реальный `report-generator/report-server` (Kotlin/Ktor, роуты `GET /health` и `POST /specifications/{versionId}`, слушает `127.0.0.1:8080` по умолчанию), либо доработать `test_server.py`.
+`tools/test_server.py` повторяет маршруты боевого `report-server`: `POST /specifications/{versionId}` и `POST /group-specifications/{versionId}` (с query `customerRepresentative`) возвращают JSON с `id`, `GET /reports/{id}` отдаёт PDF-заглушку. Настоящий отчёт этот стенд не формирует — для него нужен реальный `report-generator/report-server`.
 
 Подробнее про поток данных — в [ExternalApiPlugin](ExternalApiPlugin.md).
 

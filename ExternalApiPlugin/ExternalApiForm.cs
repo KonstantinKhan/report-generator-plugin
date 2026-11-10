@@ -112,7 +112,7 @@ namespace ExternalApiPlugin
             _resultBox.Text = "Формирование отчёта...";
             try
             {
-                if (_reportType != ReportType.SpecificationWithPZ && _reportType != ReportType.SpecificationWithoutPZ)
+                if (!IsSupportedReport(_reportType))
                 {
                     _resultBox.Text = $"{ReportTypeNames.GetName(_reportType)}\r\n\r\nЭтот отчёт находится в процессе разработки.";
                     return;
@@ -121,7 +121,7 @@ namespace ExternalApiPlugin
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 var config = ServerConfig.Load();
-                var url = config.BuildSpecificationUrl(_objectId, _reportType);
+                var url = config.BuildReportUrl(_objectId, _reportType);
 
                 using (var client = new HttpClient { Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds) })
                 using (var response = await client.PostAsync(url, null))
@@ -153,6 +153,14 @@ namespace ExternalApiPlugin
             {
                 _requestButton.IsEnabled = true;
             }
+        }
+
+        private static bool IsSupportedReport(ReportType reportType)
+        {
+            return reportType == ReportType.SpecificationWithPZ
+                || reportType == ReportType.SpecificationWithoutPZ
+                || reportType == ReportType.GroupSpecificationWithPZ
+                || reportType == ReportType.GroupSpecificationWithoutPZ;
         }
 
         private static bool TryGetReportId(string body, out string id)
