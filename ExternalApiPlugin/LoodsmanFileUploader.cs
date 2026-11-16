@@ -104,6 +104,77 @@ namespace ExternalApiPlugin
             return value == null ? null : Convert.ToString(value);
         }
 
+        /// <summary>
+        /// Подпись выбранного объекта: «Выбран объект &lt;обозначение&gt; &lt;наименование&gt;». Обозначение — ключевой атрибут
+        /// (PluginCall.stProduct), наименование — атрибут «Наименование» (GetInfoAboutVersion, режим 1). Если данных нет — только то, что удалось получить.
+        /// </summary>
+        public static string GetObjectCaption(INetPluginCall call, long idVersion)
+        {
+            string designation = null;
+            string name = null;
+            try
+            {
+                designation = call.PluginCall.stProduct;
+            }
+            catch (Exception)
+            {
+            }
+
+            try
+            {
+                var table = call.GetDataTable("GetInfoAboutVersion", string.Empty, string.Empty, string.Empty, (int)idVersion, 1);
+                if (table != null)
+                {
+                    foreach (DataRow row in table.Rows)
+                    {
+                        var key = Text(row, "_ATTRIBUTE") ?? Text(row, "_NAME");
+                        var value = Text(row, "_VALUE");
+                        if (string.Equals(key, "Наименование", StringComparison.OrdinalIgnoreCase)) name = value;
+                        else if (string.IsNullOrWhiteSpace(designation) && string.Equals(key, "Обозначение", StringComparison.OrdinalIgnoreCase)) designation = value;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            var text = $"{designation} {name}".Trim();
+            return text.Length > 0 ? $"Выбран объект {text}" : "Выбран объект";
+        }
+
+        /// <summary>
+        /// GetInfoAboutFile: к какой версии объекта привязан файл с таким именем (путь пустой, как при сохранении).
+        /// Возвращает null, если файла в базе нет или проверить не удалось.
+        /// </summary>
+        public static FileOwner FindFileOwner(INetPluginCall call, string fileName)
+        {
+            try
+            {
+                var table = call.GetDataTable("GetInfoAboutFile", fileName, string.Empty);
+                if (table == null || table.Rows.Count == 0)
+                {
+                    return null;
+                }
+
+                var row = table.Rows[0];
+                var id = Number(row, "_ID_VERSION");
+                if (id == null)
+                {
+                    return null;
+                }
+
+                return new FileOwner
+                {
+                    IdVersion = id.Value,
+                    Title = $"{Text(row, "_TYPE")} {Text(row, "_PRODUCT")} v{Text(row, "_VERSION")}"
+                };
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         /// <summary>GetInfoAboutVersion (режим 7): файлы версии, нужны чтобы подсмотреть допустимый путь файла.</summary>
         public static string GetFilesInfo(INetPluginCall call, long idVersion)
         {
@@ -223,6 +294,12 @@ namespace ExternalApiPlugin
 
             return $"результат: {value.GetType().FullName} = {value}";
         }
+    }
+
+    internal sealed class FileOwner
+    {
+        public long IdVersion { get; set; }
+        public string Title { get; set; }
     }
 
     internal sealed class TargetInfo
